@@ -13,6 +13,7 @@ const contentSchema = gql`
     }
     extend type Mutation{
         addContent(title: String, content: String):[Content]
+        modifyContent(id:String!, content: String!):[Content]
         removeContent(id:String!):[Content]
     }
 `

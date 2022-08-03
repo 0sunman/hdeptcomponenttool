@@ -21,8 +21,8 @@ import {readDB, DBField} from './jsondb'
         }
     })
 
-    
     await app.listen({port:8080});
+
 })();
 
 

@@ -1,9 +1,9 @@
 import {Resolver} from './type'
-import {writeDB, DBField} from './../jsondb'
+import {writeDB, DBField, modifyDB} from './../jsondb'
 import { v4 } from 'uuid';
 
 const setJSON = (data:any) => writeDB(DBField.CONTENTS, data);
-
+const modifyJSON = (id:string, data:any) => modifyDB(DBField.CONTENTS, id, data);
 const contentResolver:Resolver = {
     Query:{
         contents:(parent,args,{db},info)=>{
@@ -19,6 +19,10 @@ const contentResolver:Resolver = {
         addContent:(parent,{title,content},{db},info)=>{
             db.contents.push({id:v4(),title,content});
             setJSON(db.contents);
+            return db.contents;
+        },
+        modifyContent:(parent,{id,content},{db},info)=>{
+            modifyJSON(id,content)
             return db.contents;
         },
         removeContent:(parent,{id},{db},info)=>{

@@ -42,8 +42,6 @@ const writePage = () =>{
         }else if(name == "content"){
             setContent(value);
         }
-        console.log("title:",title)
-        console.log("content:",content)
 
     }
     const onClick = ()=>{
@@ -56,7 +54,7 @@ const writePage = () =>{
     return (
     <div>
         <StyledInput><input name='title' type='text' onChange={onChange} placeholder="제목"/></StyledInput>
-        <div><StyledTextarea placeholder="내용" name='content' onChange={onChange}/></div>
+        <div><StyledTextarea placeholder="코드" name='content' onChange={onChange}/></div>
         <StyledButton><button onClick={onClick}>글작성</button></StyledButton>
     </div>)
 }
