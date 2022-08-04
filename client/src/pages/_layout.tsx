@@ -72,8 +72,8 @@ const GlobalLayout = ()=>{
             <Menu>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
                 <div className="sub">
-                    {(currentPage.indexOf("/write") === -1) && <button onClick={() => navigate("/write")}>글쓰기</button>}
-                    {(currentPage.indexOf("/detail") > -1) && <button onClick={() => onRemove()}>삭제</button>}
+                    {(currentPage.indexOf("/write") === -1) && <button onClick={() => {alert("글쓰지말라고");return;navigate("/write")}}>글쓰기</button>}
+                    {(currentPage.indexOf("/detail") > -1) && <button onClick={() => onRemove()} style={{display:"none"}}>삭제</button>}
                 </div>
             </Menu>
         </Header>
