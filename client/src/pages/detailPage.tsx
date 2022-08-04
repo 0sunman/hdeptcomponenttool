@@ -30,12 +30,10 @@ const DetailPage = ()=>{
     const {data:contentDataArray,isFetched} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{onSuccess:({content})=>{
         setCodeData(content[0].content)
     }})
-    const runDOMController = (vdom:DocumentFragment,iframe:RefObject<HTMLIFrameElement>)=>{
-        
-        const targetIframe = iframe.current!.contentDocument!;
-        targetIframe.querySelector(".content-section")!.innerHTML = codeData;    
+    const runDOMController = (iframeDocument:Document)=>{
+        const vdom = document.createDocumentFragment();
         document.querySelectorAll("#html_controller > .general > div").forEach(element=>element.remove())
-        Array.prototype.slice.call(targetIframe.querySelectorAll(".content-section *[data-target-control]")).every(element=>{
+        Array.prototype.slice.call(iframeDocument.querySelectorAll(".content-section *[data-target-control]")).every(element=>{
 
             const targetControl = element.dataset.targetControl;
             const [name,target] = targetControl.split("_");
@@ -54,8 +52,7 @@ const DetailPage = ()=>{
                         titleElement.innerText = name +" 링크"    
                         inputElement.value = element.href;
                         inputElement.addEventListener("keyup",()=>{
-                            element.href = inputElement.value; 
-                            
+                            element.href = inputElement.value;                             
                         })                   
                         break;
                     case "text":
@@ -76,8 +73,15 @@ const DetailPage = ()=>{
                         titleElement.innerText = name +" 스타일"         
                         inputElement.value = element.getAttribute("style");      
                         inputElement.addEventListener("keyup",()=>{       
-                            element.style.border = "5px solid yellow"
                             element.setAttribute("style",inputElement.value);    
+                        })                   
+                    break;
+                    case "class":
+                        debugger;
+                        titleElement.innerText = name +" 클래스"         
+                        inputElement.value = element.getAttribute("className");      
+                        inputElement.addEventListener("keyup",()=>{       
+                            element.style.className = inputElement.value;
                         })                   
                     break;
                     default:
@@ -92,16 +96,8 @@ const DetailPage = ()=>{
         })
         document.querySelector("#html_controller > .general")?.appendChild(vdom);
         
-        setCodeData(targetIframe.querySelector(".content-section")!.innerHTML);  
-//        targetIframe.querySelector(".content-section")!.innerHTML = codeData;  
-        
     }
 
-    const eventLoadListener = (elementIframe : RefObject<HTMLIFrameElement>)=>{
-        const vitualDocument = document.createDocumentFragment();
-        runDOMController(vitualDocument, elementIframe);
-        
-    }
 
     const switchVisible = (mode:string)=>{
         switch(mode){
@@ -132,14 +128,16 @@ const DetailPage = ()=>{
                 inHyundaiMessage.current!.style.display = "none";
             break;
             case "general":
-                iframe.current!.contentDocument!.location.reload()
-                general.current!.style.display = "block"
-                code.current!.style.display = "none"
+                //iframe.current!.contentDocument!.location.reload()
+                setCodeData(iframe.current!.contentDocument!.querySelector(".content-section")!.innerHTML);
+                general.current!.style.display = "block";
+                code.current!.style.display = "none";
             break;
             case "code":
-                iframe.current!.contentDocument!.location.reload()
-                general.current!.style.display = "none"
-                code.current!.style.display = "block"
+                //iframe.current!.contentDocument!.location.reload()
+                setCodeData(iframe.current!.contentDocument!.querySelector(".content-section")!.innerHTML);
+                general.current!.style.display = "none";
+                code.current!.style.display = "block";
             break;
         }
     }
@@ -175,28 +173,27 @@ const DetailPage = ()=>{
         setIdState(id);
     },[id]);
     const onCodeChange = (e:SyntheticEvent)=>{
-//        const targetIframe = iframe.current!.contentDocument!;
         setCodeData((e.target as HTMLTextAreaElement).value);
-    }
-    const onGeneralChange = (element:any,attribute:string,value:string)=>{
-        const targetIframe = iframe.current!.contentDocument!;
-        element[attribute] = value;
-        setCodeData(targetIframe.querySelector(".content-section")!.innerHTML);
     }
     useEffect(()=>{
             if(isIframeLoaded){
-                const targetIframe = iframe.current!.contentDocument!;
-                targetIframe.querySelector(".content-section")!.innerHTML = codeData;          
+                const iframeDocument = iframe.current!.contentDocument!;
+                iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
             }
     },[codeData])
+    const initializePage = () =>{
+        console.log("init");
+        const targetIframe = iframe.current!.contentDocument!;
+        targetIframe.querySelector(".content-section")!.innerHTML = codeData;
+        runDOMController(targetIframe)
+    }
     useEffect(()=>{
         if(isFetched){
             setIframeLoaded(true);
-            const elementIframe = iframe;
-            elementIframe.current!.addEventListener("load",eventLoadListener.bind(this,elementIframe))
+            iframe.current!.addEventListener("load",initializePage.bind(this))
             return ()=>{
                 try{
-                    (elementIframe.current as HTMLIFrameElement).removeEventListener("load",eventLoadListener.bind(this,elementIframe));
+                    (iframe.current as HTMLIFrameElement).removeEventListener("load",initializePage.bind(this));
                 }catch(e){
 
                 }
