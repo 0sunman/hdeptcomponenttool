@@ -15,7 +15,6 @@ export const getQueryClient = (()=>{
                     staleTime:1000,
                     refetchOnReconnect:false,
                     refetchOnWindowFocus:false,
-                    refetchInterval:10000,
                     enabled :true
                 }
             }

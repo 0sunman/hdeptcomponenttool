@@ -7,6 +7,17 @@ export const SiteInfo = atom({
         "page":{
             "title":"",
             "content":""
+        },
+        "code":"",
+        "control":{
+            paneSize:5
+        },
+        "popup":{
+            imgUpload:{
+                main:"none",
+                hyundai:"none",
+                general:"none"
+            }
         }
     }    
 })
@@ -30,5 +41,26 @@ export const writeSelector = selector({
     get:({get})=>(get(SiteInfo).page),
     set:({set,get,reset},newValue)=>{
         set(SiteInfo, prev =>({...prev,"page":newValue}))
+    }
+})
+export const popupImageUploadSelector = selector({
+    key:"popupImageUploadSelector",
+    get:({get})=>(get(SiteInfo).popup.imgUpload),
+    set:({set,get},newValue:any)=>{
+        set(SiteInfo,prevState => ({...prevState, "popup" : { "imgUpload":{...(prevState.popup.imgUpload),...newValue}}}))
+    }
+})
+export const controlPaneSizeSelector = selector({
+    key:"controlPaneSizeSelector",
+    get:({get})=>(get(SiteInfo).control.paneSize),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"control":{paneSize:newValue}}))
+    }
+})
+export const codeSelector = selector({
+    key:"codeSelector",
+    get:({get})=>(get(SiteInfo).code),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"code":newValue}))
     }
 })
