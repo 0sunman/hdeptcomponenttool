@@ -75,9 +75,9 @@ table {
     background: white;
     padding: 0px; 
     border-top: 1px solid #000;
-    overflow-y: scroll;
 	z-index: 5;
 }
+#html_controller .controller{height:100%; overflow-y: scroll;}
 .imageUploader{ border-bottom:1px solid #000}
 #imgUrl {margin-top:10px; width:100%;}
 

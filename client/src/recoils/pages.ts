@@ -10,7 +10,8 @@ export const SiteInfo = atom({
         },
         "code":"",
         "control":{
-            paneSize:5
+            paneSize:5,
+            device:"pc"
         },
         "popup":{
             imgUpload:{
@@ -57,6 +58,16 @@ export const controlPaneSizeSelector = selector({
         set(SiteInfo, prev =>({...prev,"control":{paneSize:newValue}}))
     }
 })
+
+
+export const deviceSelector = selector({
+    key:"controlPaneSizeSelector",
+    get:({get})=>(get(SiteInfo).control.device),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"control":{device:newValue}}))
+    }
+})
+
 export const codeSelector = selector({
     key:"codeSelector",
     get:({get})=>(get(SiteInfo).code),
