@@ -1,9 +1,11 @@
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import DetailPageContainer from "../container/DetailPageContainer";
 
-
-
 const DetailPage = ()=>{
-    return (<DetailPageContainer pageType="general"></DetailPageContainer>)
+    const location = useLocation();
+    return (
+        <DetailPageContainer pageType={(location.pathname.indexOf("/dev") > -1) ? "dev" : "general"}></DetailPageContainer>
+    )
     
 }
 export default DetailPage;

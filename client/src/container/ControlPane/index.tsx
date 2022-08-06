@@ -24,7 +24,7 @@ const ControlPaneContainer = ({children, copyCode, ImageUploader}:{children:Reac
         }
     }
     
-    const switchTab = (tab:string) => {
+    const switchDevice = (string:string) => {
         /* TODO */
     }
 
@@ -38,7 +38,7 @@ const ControlPaneContainer = ({children, copyCode, ImageUploader}:{children:Reac
     }
 
 
-    const attribute = {copyClipboard:copyCode,openImageUploaderPopup,switchTab,controlHeight}
+    const attribute = {copyClipboard:copyCode,openImageUploaderPopup,switchDevice,controlHeight}
     return (<ControlPane {...attribute}>{children}</ControlPane>)
 }
 

@@ -61,7 +61,7 @@ const runDOMController = (iframeDocument:Document)=>{
         })
         return true;
     })
-    document.querySelector("#html_controller > .general")?.appendChild(vdom);
+    document.querySelector("#html_controller .general")?.appendChild(vdom);
     
 }
 

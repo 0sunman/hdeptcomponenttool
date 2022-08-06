@@ -5,7 +5,6 @@ import runDOMController from "../../util/runDOMController";
 
 
 const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean}>((props,ref)=>{
-    console.log(ref);
     const {isFetched} = props;
     const codeData = useRecoilValue<string>(codeSelector);
     const applyCodeOnIframe = ({isDOMController}:{isDOMController?:Boolean}) =>{
