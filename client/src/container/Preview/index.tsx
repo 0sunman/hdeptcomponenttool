@@ -1,14 +1,13 @@
-import { forwardRef, RefObject, useEffect, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, RefObject, useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { codeSelector } from "../../recoils/pages";
 import runDOMController from "../../util/runDOMController";
 
 
-const PreviewContainer = forwardRef<RefObject<HTMLIFrameElement>,{isFetched:boolean}>((props,ref)=>{
+const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean}>((props,ref)=>{
     console.log(ref);
     const {isFetched} = props;
     const codeData = useRecoilValue<string>(codeSelector);
-    
     const applyCodeOnIframe = ({isDOMController}:{isDOMController?:Boolean}) =>{
         const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
         iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
