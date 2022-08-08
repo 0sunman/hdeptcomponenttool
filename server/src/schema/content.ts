@@ -15,7 +15,7 @@ const contentSchema = gql`
     }
     extend type Mutation{
         addContent(title: String, content: String, path:String, selector:String):[Content]
-        modifyContent(id:String!, content: String!):[Content]
+        modifyContent(id:String!,title: String, content: String, path:String, selector:String):[Content]
         removeContent(id:String!):[Content]
     }
 `

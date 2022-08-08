@@ -7,8 +7,6 @@ const Detail = styled.div`
     margin:30px;
     margin-bottom:300px;
     & h2 {padding:20px; border-bottom:1px solid #000}
-    & h2 span { font-size:1.4em; }
-    & p,div {padding:20px; font-size:1.4em;}
     & div {padding-top:0px;}
     textarea{width:100%;height:500px;}
 `

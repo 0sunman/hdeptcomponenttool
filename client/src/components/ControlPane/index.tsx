@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { controlPaneSizeSelector } from "../../recoils/pages";
 import styled from "styled-components";
@@ -36,12 +36,12 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
         if(type === "gen"){
             window.location.href = `/detail/dev/${detailId}`;
         }else{
-//            navigate(`/detail/${detailId}`)
             window.location.href = `/detail/${detailId}`;
         }
     }
+    const initHeight = currentType !== "dev" ? "85px" : "135px";
     return ( 
-        <div id="html_controller" style={{height:`calc(${controlPaneSize}% + 85px)`}}>
+        <div id="html_controller" style={{height:`calc(${controlPaneSize}% + ${initHeight})`}}>
             <div className='controlpane'>
                 <ControlList>
                     <ControlButton onClick={copyClipboard}>
@@ -85,6 +85,7 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
                         <span className="material-symbols-outlined icon">zoom_out_map</span>
                         <span className="text">크기 조절</span>
                         <VerticalList className="sizecontrol" ref={view_list} style={{display:"none"}}>
+                            
                             <ControlButton onClick={()=>controlHeight(0)}>
                                 0%
                             </ControlButton>
@@ -99,6 +100,12 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
                             </ControlButton>
                             <ControlButton onClick={()=>controlHeight(50)}>
                                 50%
+                            </ControlButton>
+                            <ControlButton onClick={()=>controlHeight(65)}>
+                                65%
+                            </ControlButton>
+                            <ControlButton onClick={()=>controlHeight(70)}>
+                                70%
                             </ControlButton>
                             <ControlButton onClick={()=>controlHeight(80)}>
                                 80%

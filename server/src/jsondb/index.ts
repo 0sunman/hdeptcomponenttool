@@ -29,16 +29,19 @@ export const writeDB = (selectedDB:DBField, data:any):Boolean => {
         return false
     }
 }
-export const modifyDB = (selectedDB:DBField,id:string, path:string, selector:string, data:any):Boolean => {
+export const modifyDB = (selectedDB:DBField,id:string, title:string, path:string, selector:string, data:any):Boolean => {
     try{
+        console.log("MODIFY",id)
         const originData = readDB(selectedDB);
         const afterData = originData.map((element:any,idx:number)=>{
             if(element.id === id){
-                return {...element, content:data, path, selector}
+                console.log("MODIFY",{id, title, path, selector})
+                return {...element, title, content:data, path, selector}
             }else{
                 return element;
             }
         })
+
         fs.writeFileSync(filenames[selectedDB],JSON.stringify(afterData))
         return true
     }catch(e){
