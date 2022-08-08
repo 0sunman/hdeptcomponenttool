@@ -20,5 +20,8 @@
 원하는 컴포넌트 목록에 들어가서, 수정할 곳에 수정한 후, HTML코드를 복사하여 TIS에 붙입니다.
 
 ## 실행방법
-- npm run client
-- npm run server
+- 1. Clone
+- 2. Clone 이후 client, server 디렉토리를 들어가서 yarn을 실행
+- 3. 아래 명령어를 통해서 client와 server를 각각 터미널에서 실행합니다.
+-- npm run client
+-- npm run server
