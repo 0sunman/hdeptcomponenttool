@@ -4,7 +4,7 @@
 - 다른 사이트에서도 범용적으로 사용할 수 있도록 설계하였습니다.
 
 ## 기술스펙 : 
-- frontend : react / react-query / recoil
+- frontend : react / react-query / recoil / vite 
 - backend : express / apollo-server / graphql
 
 ## 개발자 
