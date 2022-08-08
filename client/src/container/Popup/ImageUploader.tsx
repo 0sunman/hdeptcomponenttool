@@ -1,6 +1,7 @@
 import PopupContainer from ".";
 import { useRecoilState } from "recoil";
 import { popupImageUploadSelector } from "../../recoils/pages";
+import { useEffect } from "react";
 
 const ImageUploaderPopup = () =>{
     const [visibleImageUploaderPopup, setVisibleImageUploaderPopup] = useRecoilState(popupImageUploadSelector);
@@ -20,14 +21,18 @@ const ImageUploaderPopup = () =>{
         console.log(visibleImageUploaderPopup);
     }
 
+    useEffect(()=>{
+        doInnerHyundai();
+    },[])
+
     return(
         <PopupContainer visible={visibleImageUploaderPopup.main} onClose={closeImageUploaderPopup}>
             <div>
         
                 <h2>이미지 업로더</h2>
                 <div>
-                    <button onClick={doInnerHyundai}>현대백화점 외부</button>
-                    <button onClick={doExHyundai}>현대백화점 내부</button>
+                    <button onClick={doInnerHyundai}>현대백화점 내부</button>
+                    <button onClick={doExHyundai}>현대백화점 외부</button>
                 </div>
                 <div style={{display:visibleImageUploaderPopup.hyundai}}>
                     <a href="http://tis.thehyundai.com/front/daumeditor/editor6.jsp#" target="_blank">[ 클릭 ]</a>

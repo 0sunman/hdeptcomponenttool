@@ -1,8 +1,11 @@
 import { SyntheticEvent, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useMutation } from "react-query";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import Editor from "../../components/Editor";
-import { codeSelector, writeSelector } from "../../recoils/pages";
+import { MODIFY_CONTENT } from "../../graphql/contents";
+import { graphqlFetcher } from "../../lib/queryClient";
+import { codeSelector, controlPaneSizeSelector, IdSelector, writeSelector } from "../../recoils/pages";
 
 const ModifyContainer = ({title,content,path,selector}:{title:string,content:string,path:string,selector:string}) =>{
     
@@ -12,6 +15,16 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
     const [pselector,setSelector] = useState(selector);
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const setPage = useSetRecoilState(writeSelector);
+    const id:string = useRecoilValue(IdSelector);
+    const {mutate:modifyItem} = useMutation(()=>graphqlFetcher(MODIFY_CONTENT,{id, title:ptitle,path:ppath,selector:pselector,content:pcontent}),{
+        onMutate:(data)=>{
+            console.log(data);
+        },
+        onSuccess:(data)=>{
+            alert("수정 완료!");
+//            console.log(data);
+        }
+    });
     const onChange = (e:SyntheticEvent) =>{
         const {name,value} = (e.target as HTMLInputElement);
         if(name == "title"){
@@ -29,16 +42,18 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
     },[pcontent])
     
     const onClick = ()=>{
-        if(ptitle.length > 10 && pcontent.length > 10){
-            setPage({ title:ptitle,content:pcontent,path:ppath,selector:pselector});
-        }else{
-            alert("10자이상 입력해야함");
-        }
+        console.log([ptitle]);
+        modifyItem();
     }
-    const attr = {title:ptitle,content:pcontent,path:ppath,selector:pselector,onChange,onClick}
+
+    const attr = {title:ptitle,content:pcontent,path:ppath,selector:pselector,onChange,onClick,mode:"dev"}
     return (
         <Editor {...attr}></Editor>
     )
 }
 
 export default ModifyContainer;
+
+function MODIFY_CONTENTS(MODIFY_CONTENTS: any, arg1: { title: string; path: string; selector: string; content: string; }): Promise<any> {
+    throw new Error("Function not implemented.");
+}

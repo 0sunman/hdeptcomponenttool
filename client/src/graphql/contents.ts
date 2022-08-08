@@ -47,3 +47,16 @@ export const ADD_CONTENTS = gql`
         }
     }
 `
+
+export const MODIFY_CONTENT = gql`
+    mutation Mutation($id: String!, $content: String, $path: String, $selector: String, $title: String) {
+        modifyContent(id: $id, content: $content, path: $path, selector: $selector, title: $title) {
+        id
+        path
+        selector
+        title
+        content
+        data
+        }
+  }
+`

@@ -31,7 +31,9 @@ const writeContainer = () =>{
             alert("10자이상 입력해야함");
         }
     }
-    const attr = {title,content,path,selector,onChange,onClick}
+
+
+    const attr = {title,content,path,selector,onChange,onClick,mode:"gen"}
     return (
         <Editor {...attr}></Editor>
     )
