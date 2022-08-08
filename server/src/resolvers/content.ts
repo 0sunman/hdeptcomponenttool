@@ -3,7 +3,7 @@ import {writeDB, DBField, modifyDB} from './../jsondb'
 import { v4 } from 'uuid';
 
 const setJSON = (data:any) => writeDB(DBField.CONTENTS, data);
-const modifyJSON = (id:string, data:any) => modifyDB(DBField.CONTENTS, id, data);
+const modifyJSON = (id:string, path:string, selector:string, data:any) => modifyDB(DBField.CONTENTS, id, path,selector, data);
 const contentResolver:Resolver = {
     Query:{
         contents:(parent,args,{db},info)=>{
@@ -16,13 +16,13 @@ const contentResolver:Resolver = {
         }
     },
     Mutation:{
-        addContent:(parent,{title,content},{db},info)=>{
-            db.contents.push({id:v4(),title,content});
+        addContent:(parent,{title,path,selector,content},{db},info)=>{
+            db.contents.push({id:v4(),title,path,selector,content});
             setJSON(db.contents);
             return db.contents;
         },
-        modifyContent:(parent,{id,content},{db},info)=>{
-            modifyJSON(id,content)
+        modifyContent:(parent,{id,path,selector,content},{db},info)=>{
+            modifyJSON(id,path,selector,content)
             return db.contents;
         },
         removeContent:(parent,{id},{db},info)=>{

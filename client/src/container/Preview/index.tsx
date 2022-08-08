@@ -4,12 +4,15 @@ import { codeSelector } from "../../recoils/pages";
 import runDOMController from "../../util/runDOMController";
 
 
-const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean}>((props,ref)=>{
-    const {isFetched} = props;
+const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean, selector:string, path:string}>((props,ref)=>{
+    const {isFetched, selector, path} = props;
+    if(selector === undefined || path === undefined){
+        return <div>Loading...</div>
+    }
     const codeData = useRecoilValue<string>(codeSelector);
     const applyCodeOnIframe = ({isDOMController}:{isDOMController?:Boolean}) =>{
         const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
-        iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
+        iframeDocument.querySelector(selector)!.innerHTML = codeData;
         if(isDOMController){
             runDOMController(iframeDocument)
         }
@@ -30,8 +33,9 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean}>((prop
             }
         }
     },[isFetched]);
+    console.log(path,selector)
 
-    return <div className='preview'><iframe src="/public/cos.html" ref={ref}></iframe></div>
+    return <div className='preview'><iframe src={path} ref={ref}></iframe></div>
 })
 
 export default PreviewContainer;

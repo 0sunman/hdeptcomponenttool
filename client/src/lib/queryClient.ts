@@ -3,7 +3,7 @@ import {
     QueryClient
 } from 'react-query';
 
-const BASE_URL = "http://10.108.70.52:8080/graphql";
+const BASE_URL = "http://localhost:8080/graphql";
 
 export const getQueryClient = (()=>{
     let client:(QueryClient | null) = null
@@ -27,4 +27,5 @@ export const graphqlFetcher = async(query:RequestDocument, variables={}) => {ret
 
 export const QueryKeys = {
     CONTENT : "CONTENT",
+    TYPE : "TYPE"
 }
