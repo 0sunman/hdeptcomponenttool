@@ -1,7 +1,7 @@
 ﻿# 현대백화점 e마케팅팀 컴포넌트 관리도구
 ## 설명 
 - 코딩 지식 없이도 HTML 템플릿을 운용할 수 있도록 만든 도구.
-- 
+
 ## 기술스펙 : 
 - frontend : react / react-query / recoil
 - backend : express / apollo-server / graphql
