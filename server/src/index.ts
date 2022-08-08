@@ -7,7 +7,8 @@ import {readDB, DBField} from './jsondb'
 (async()=>{
     const server = new ApolloServer({typeDefs:schema, resolvers, context:{
         db : {
-            contents:readDB(DBField.CONTENTS)
+            contents:readDB(DBField.CONTENTS),
+            types:readDB(DBField.TYPES)
         }
     }});
     const app = express();

@@ -3,6 +3,8 @@ import {gql} from 'apollo-server-express'
 const contentSchema = gql`
     type Content {
         id:String!,
+        path:String,
+        selector:String,
         title:String,
         content:String,
         data:String
@@ -12,7 +14,7 @@ const contentSchema = gql`
         content(id:String!): [Content]
     }
     extend type Mutation{
-        addContent(title: String, content: String):[Content]
+        addContent(title: String, content: String, path:String, selector:String):[Content]
         modifyContent(id:String!, content: String!):[Content]
         removeContent(id:String!):[Content]
     }

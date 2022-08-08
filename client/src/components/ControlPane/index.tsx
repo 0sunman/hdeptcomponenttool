@@ -2,6 +2,7 @@ import { ReactNode, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { controlPaneSizeSelector } from "../../recoils/pages";
 import styled from "styled-components";
+import {useLocation, useNavigate } from "react-router-dom";
 
 const ControlList = styled.div`
     display:flex;
@@ -27,10 +28,21 @@ const VerticalList = styled.div`
 
 const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice,controlHeight}:{children:ReactNode, copyClipboard:any,openImageUploaderPopup:any,switchDevice:any,controlHeight:any}) =>{
     const controlPaneSize = useRecoilValue(controlPaneSizeSelector);
+    const location = useLocation();
     const [device_list, view_list] = [useRef<HTMLDivElement>(null),useRef<HTMLDivElement>(null)];
+    const currentType = location.pathname.indexOf("/dev") > -1 ? "dev" : "gen"
+    const goTo = (type:"gen"|"dev") =>{
+        const detailId = location.pathname.split("/")[location.pathname.split("/").length -1]
+        if(type === "gen"){
+            window.location.href = `/detail/dev/${detailId}`;
+        }else{
+//            navigate(`/detail/${detailId}`)
+            window.location.href = `/detail/${detailId}`;
+        }
+    }
     return ( 
-        <div id="html_controller" style={{height:controlPaneSize+"%"}}>
-            <div style={{width:"100%",textAlign:"center"}}>
+        <div id="html_controller" style={{height:`calc(${controlPaneSize}% + 85px)`}}>
+            <div className='controlpane'>
                 <ControlList>
                     <ControlButton onClick={copyClipboard}>
                         <span className="material-symbols-outlined icon">content_paste</span>
@@ -73,7 +85,7 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
                         <span className="material-symbols-outlined icon">zoom_out_map</span>
                         <span className="text">크기 조절</span>
                         <VerticalList className="sizecontrol" ref={view_list} style={{display:"none"}}>
-                            <ControlButton onClick={()=>controlHeight(5)}>
+                            <ControlButton onClick={()=>controlHeight(0)}>
                                 0%
                             </ControlButton>
                             <ControlButton onClick={()=>controlHeight(20)}>
@@ -93,6 +105,18 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
                             </ControlButton>
                         </VerticalList>
                     </ControlButton>
+                    {currentType !== "dev" ? (
+                    <ControlButton onClick={() => goTo("gen")}>
+                        <span className="material-symbols-outlined icon">edit</span>
+                        <span className="text">개발 모드</span>
+                    </ControlButton>
+
+                    ):(
+                    <ControlButton onClick={() => goTo("dev")}>
+                        <span className="material-symbols-outlined icon">face</span>
+                        <span className="text">일반 모드</span>
+                    </ControlButton>
+                    )}
                     
 
                 </ControlList>

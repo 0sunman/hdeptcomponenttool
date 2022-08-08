@@ -5,12 +5,14 @@ export const SiteInfo = atom({
         "id":"",
         "currentPage" : "index",
         "page":{
+            "path":"",
             "title":"",
+            "selector":"",
             "content":""
         },
         "code":"",
         "control":{
-            paneSize:5,
+            paneSize:20,
             device:"pc"
         },
         "popup":{
@@ -42,6 +44,20 @@ export const writeSelector = selector({
     get:({get})=>(get(SiteInfo).page),
     set:({set,get,reset},newValue)=>{
         set(SiteInfo, prev =>({...prev,"page":newValue}))
+    }
+})
+export const pathSelector = selector({
+    key:"pathSelector",
+    get:({get})=>(get(SiteInfo).page.path),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"page":{"path":newValue}}))
+    }
+})
+export const selectorSelector = selector({
+    key:"selectorSelector",
+    get:({get})=>(get(SiteInfo).page.selector),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"page":{"selector":newValue}}))
     }
 })
 export const popupImageUploadSelector = selector({

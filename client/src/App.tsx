@@ -11,7 +11,7 @@ const App = () => {
   const [count, setCount] = useState<number>(0)
   const element = useRoutes(routes);
   const queryClient = getQueryClient();
-  return <QueryClientProvider client={queryClient}><div>{element}</div><ReactQueryDevtools initialIsOpen={false} /></QueryClientProvider>
+  return <QueryClientProvider client={queryClient}><div>{element}</div></QueryClientProvider>
 }
 
 export default App

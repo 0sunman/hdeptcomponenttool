@@ -2,12 +2,12 @@ import * as fs from "fs";
 import { resolve } from "path";
 
 export enum DBField{
-    CONTENTS="contents"
+    CONTENTS="contents",
 }
 const BASEPATH = resolve();
 console.log(BASEPATH)
 const filenames = {
-    [DBField.CONTENTS]:resolve(BASEPATH, "src/jsondb/datas/contents.json")
+    [DBField.CONTENTS]:resolve(BASEPATH, "src/jsondb/datas/contents.json"),
 }
 
 
@@ -29,12 +29,12 @@ export const writeDB = (selectedDB:DBField, data:any):Boolean => {
         return false
     }
 }
-export const modifyDB = (selectedDB:DBField,id:string, data:any):Boolean => {
+export const modifyDB = (selectedDB:DBField,id:string, path:string, selector:string, data:any):Boolean => {
     try{
         const originData = readDB(selectedDB);
         const afterData = originData.map((element:any,idx:number)=>{
             if(element.id === id){
-                return {...element, content:data}
+                return {...element, content:data, path, selector}
             }else{
                 return element;
             }

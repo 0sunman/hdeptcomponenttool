@@ -6,6 +6,8 @@ export const GET_CONTENT = gql`
             id,
             title,
             content,
+            path,
+            selector,
             data
         }
 
@@ -15,9 +17,12 @@ export const GET_CONTENT = gql`
 export const GET_CONTENTS = gql`
     query GET_CONTENTS{
         contents{
-            id,
-            title,
+            id
+            path
+            title
             content
+            selector
+            data
         }
     }
 `
@@ -32,10 +37,12 @@ export const REMOVE_CONTENT = gql`
 `
 
 export const ADD_CONTENTS = gql`
-    mutation ADD_CONTENT($title: String, $content: String){
-        addContent(title:$title, content:$content){
+    mutation ADD_CONTENT($title: String, $content: String, $path:String, $selector:String){
+        addContent(title:$title, content:$content, path:$path, selector:$selector){
             id,
             title,
+            path,
+            selector,
             content
         }
     }

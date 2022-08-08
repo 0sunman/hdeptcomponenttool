@@ -40,7 +40,7 @@ const GlobalLayout = ()=>{
     const id = useRecoilValue(IdSelector);
     const [currentPage, setCurrentPage] = useRecoilState(CurrentPageSelector);
     const [page, setPage] =useRecoilState(writeSelector);
-    const {title,content} = page;
+    const {title,content,path,selector} = page;
 
     const navigate = useNavigate();
     const {mutate:removeItem} = useMutation((id:string)=>graphqlFetcher(REMOVE_CONTENT,{id}),{
@@ -48,7 +48,7 @@ const GlobalLayout = ()=>{
             navigate("/")
         }
     });
-    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,content}),{
+    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content}),{
         onSuccess:()=>{
             navigate("/");
         }
@@ -72,7 +72,7 @@ const GlobalLayout = ()=>{
             <Menu>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
                 
-                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {alert("글쓰지말라고");return;navigate("/write")}}>글쓰기</button></div>}
+                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button></div>}
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
                             <button onClick={() => {}}>일반 편집</button>

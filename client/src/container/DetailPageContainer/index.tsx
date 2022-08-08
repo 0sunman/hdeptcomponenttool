@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GET_CONTENT } from "../../graphql/contents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
-import { codeSelector, IdSelector } from "../../recoils/pages";
+import { codeSelector, IdSelector, pathSelector, selectorSelector } from "../../recoils/pages";
 import DetailPageComponent from "../../components/DetailPage";
 import PreviewContainer from "../Preview";
 import GeneralContainer from "./general";
@@ -15,23 +15,26 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const iframe = useRef<HTMLIFrameElement>(null);
     const [idState, setIdState] = useRecoilState<string>(IdSelector);
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
+    const [selector,setSelector] = useRecoilState<string>(selectorSelector);
+    const [path,setPath] = useRecoilState<string>(pathSelector);
     const {id}=param;
     useEffect(()=>{
         setIdState(id);
     },[id]);
-    const {isFetched} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{onSuccess:({content})=>{
+    const {data,isFetched} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{onSuccess:({content})=>{
         setCodeData(content[0].content)
     }})
+
     
 
     if(isFetched){
         return (
         <DetailPageComponent>
-            <PreviewContainer isFetched={isFetched} ref={iframe}/>
+            <PreviewContainer isFetched={isFetched} ref={iframe} selector={data.content[0].selector} path={data.content[0].path}/>
             {pageType=== "general" ? (
                 <GeneralContainer ref={iframe}></GeneralContainer>
             ): pageType ==="dev" ? (
-                <DevContainer ref={iframe}></DevContainer>
+                <DevContainer ref={iframe} data={data}></DevContainer>
             ):(<div>Type ERROR</div>)}
         </DetailPageComponent>
         )

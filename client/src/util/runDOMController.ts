@@ -1,6 +1,6 @@
 const runDOMController = (iframeDocument:Document)=>{
     const vdom = document.createDocumentFragment();
-    document.querySelectorAll("#html_controller > .general > div").forEach(element=>element.remove())
+    document.querySelectorAll("#html_controller .general > div").forEach(element=>element.remove())
     Array.prototype.slice.call(iframeDocument.querySelectorAll(".content-section *[data-target-control]")).every(element=>{
 
         const targetControl = element.dataset.targetControl;
