@@ -3,7 +3,7 @@ import {
     QueryClient
 } from 'react-query';
 
-const BASE_URL = "http://localhost:8080/graphql";
+const BASE_URL = "https://zerosunshop.herokuapp.com/graphql";
 
 export const getQueryClient = (()=>{
     let client:(QueryClient | null) = null
