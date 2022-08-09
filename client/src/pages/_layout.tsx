@@ -28,8 +28,8 @@ const Menu = styled.div`
     height:40px; 
     flex-direction:row;
     justify-content:center;
-    & .back{position:absolute; left:5px;margin-left:10px; border:0; background-color:#fff}
-    & .sub{position:absolute; right:5px;}
+    & .back{position:absolute; top: 7px; left: 5px;margin-left:10px; border:0; background-color:#fff}
+    & .sub{position:absolute; right:12px;}
     & .sub > button{margin-right:10px; border:0; background-color:#fff}
 `
 const Title = styled.span``
