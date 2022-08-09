@@ -31,7 +31,7 @@ const Menu = styled.div`
     color:white;
     background-color:#45675b;
     & .back{position:absolute; top: 7px; left: 5px;margin-left:10px; color:white; border:0; background-color:#45675b}
-    & .sub{position:absolute; right:12px; color:white;}
+    & .sub{position:absolute; right:7px; color:white;}
     & .sub > button{margin-right:10px; border:0; background-color:#45675b; color:white;}
 `
 const Title = styled.span``
@@ -84,7 +84,7 @@ const GlobalLayout = ()=>{
                     {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button></div>}
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
-                            <Link to='/'>목록으로</Link>
+                            <Link to='/' style={{color:"white"}}>목록으로</Link>
                         </div>
                     )}
             </Menu>
