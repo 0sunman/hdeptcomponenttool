@@ -32,9 +32,9 @@ const runDOMController = (iframeDocument:Document)=>{
                 break;
                 case "src":
                     titleElement.innerText = name +" 이미지"         
-                    inputElement.value = element.href;             
+                    inputElement.value = element.src;             
                     inputElement.addEventListener("keyup",()=>{       
-                        element.href = inputElement.value;                
+                        element.src = inputElement.value;                
                     })                                        
                 break;
                 case "style":
