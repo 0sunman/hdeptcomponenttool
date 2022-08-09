@@ -74,8 +74,8 @@ const GlobalLayout = ()=>{
         <Header>
             <Menu>
                 <Title>THE Hyundai - 해외브랜드 컴포넌트 편집기 
-                    {(currentPage.indexOf("/write") === -1) && " - 글쓰기 모드"}
-                    {(currentPage.indexOf("/detail") === -1) && " - 편집 모드"}
+                    {(currentPage.indexOf("/write") > -1) && " - 글쓰기 모드"}
+                    {(currentPage.indexOf("/detail") > -1) && " - 편집 모드"}
                 
                 </Title>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
