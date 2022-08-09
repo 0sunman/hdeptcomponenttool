@@ -71,12 +71,11 @@ const GlobalLayout = ()=>{
         <Header>
             <Menu>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
-                
+                    일반 편집모드
                     {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button></div>}
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
-                            <button onClick={() => {}}>일반 편집</button>
-                            <button onClick={() => {}}>개발자 편집</button>
+                            <Link to='/'>목록으로</Link>
                         </div>
                     )}
             </Menu>
