@@ -26,10 +26,13 @@ const Header = styled.div`
 const Menu = styled.div`
     display:flex; 
     height:40px; 
-    & .back{margin-left:10px; border:0; background-color:#fff}
-    & .sub{margin-left:auto}
+    flex-direction:row;
+    justify-content:center;
+    & .back{position:absolute; left:5px;margin-left:10px; border:0; background-color:#fff}
+    & .sub{position:absolute; right:5px;}
     & .sub > button{margin-right:10px; border:0; background-color:#fff}
 `
+const Title = styled.span``
 
 const onChange = (e:SyntheticEvent)=>{
     const inputData = (e.target) as HTMLInputElement;
@@ -70,8 +73,12 @@ const GlobalLayout = ()=>{
     <div>
         <Header>
             <Menu>
+                <Title>HDEPT 컴포넌트 편집기 
+                    {(currentPage.indexOf("/write") === -1) && " - 글쓰기 모드"}
+                    {(currentPage.indexOf("/detail") === -1) && " - 편집 모드"}
+                
+                </Title>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
-                    일반 편집모드
                     {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button></div>}
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
