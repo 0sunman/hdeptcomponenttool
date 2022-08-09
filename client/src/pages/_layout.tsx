@@ -28,9 +28,11 @@ const Menu = styled.div`
     height:40px; 
     flex-direction:row;
     justify-content:center;
-    & .back{position:absolute; top: 7px; left: 5px;margin-left:10px; border:0; background-color:#fff}
-    & .sub{position:absolute; right:12px;}
-    & .sub > button{margin-right:10px; border:0; background-color:#fff}
+    color:white;
+    background-color:#45675b;
+    & .back{position:absolute; top: 7px; left: 5px;margin-left:10px; color:white; border:0; background-color:#45675b}
+    & .sub{position:absolute; right:12px; color:white;}
+    & .sub > button{margin-right:10px; border:0; background-color:#45675b; color:white;}
 `
 const Title = styled.span``
 
