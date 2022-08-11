@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import { controlPaneSizeSelector } from "../../recoils/pages";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import React from "react";
 
 const ControlList = styled.div`
     display:flex;
@@ -139,4 +140,4 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
 
 
 }
-export default ControlPane
+export default React.memo(ControlPane)

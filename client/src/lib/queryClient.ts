@@ -11,12 +11,13 @@ export const getQueryClient = (()=>{
         if(!client) client = new QueryClient({
             defaultOptions:{
                 queries:{
+                    retry:1,
                     cacheTime:1000*60*60*24,
                     staleTime:1000,
                     refetchOnReconnect:false,
                     refetchOnWindowFocus:false,
                     enabled :true
-                }
+                },
             }
         });
         return client;

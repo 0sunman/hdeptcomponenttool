@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components"
 
 const BottomButton = styled.div`
@@ -12,4 +13,4 @@ const BottomButton = styled.div`
 }
 `
 
-export default BottomButton;
+export default React.memo(BottomButton);

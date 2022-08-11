@@ -1,3 +1,4 @@
+import React from "react";
 import { ReactNode, RefObject } from "react";
 import { useRecoilState, useRecoilValue } from "recoil"
 import ControlPane from "../../components/ControlPane";
@@ -42,4 +43,4 @@ const ControlPaneContainer = ({children, copyCode, ImageUploader}:{children:Reac
     return (<ControlPane {...attribute}>{children}</ControlPane>)
 }
 
-export default ControlPaneContainer;
+export default React.memo(ControlPaneContainer);

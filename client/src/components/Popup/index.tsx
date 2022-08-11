@@ -1,3 +1,4 @@
+import React from "react";
 import { forwardRef, ReactNode, RefObject, useEffect, useState } from "react";
 
 type Props = {
@@ -7,14 +8,12 @@ type Props = {
 }
 
 const Popup = ({children, visible, onClose}:Props) => {
-    const [close, setClose] = useState("flex")
-    const onAutoClose = ()=>{
-        setClose(close === "flex" ? "none" : "flex");
-    }
     return (            
-    <div className="popup-bg" style={{display:(visible?"flex":"none")}}>
+
+    <div className="popup-bg" 
+        style={{display:(visible?"flex":"none")}}>
         <div className="popup">
-            <span className="material-symbols-outlined close" onClick={onClose ? onClose : onAutoClose}>close</span>
+            <span className="material-symbols-outlined close" onClick={onClose}>close</span>
             {children}
         </div>
     </div>
@@ -22,4 +21,4 @@ const Popup = ({children, visible, onClose}:Props) => {
 };
 
 
-export default Popup;
+export default React.memo(Popup);

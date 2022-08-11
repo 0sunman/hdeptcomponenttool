@@ -1,11 +1,12 @@
+import React, { useCallback } from "react";
 import { ForwardedRef, forwardRef, RefObject, useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { codeSelector } from "../../recoils/pages";
 import runDOMController from "../../util/runDOMController";
 
 
-const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean, selector:string, path:string}>((props,ref)=>{
-    const {isFetched, selector, path} = props;
+const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, selector:string, path:string}>((props,ref)=>{
+    const {isSuccess, selector, path} = props;
     if(selector === undefined || path === undefined){
         return <div>Loading...</div>
     }
@@ -17,23 +18,22 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isFetched:boolean, select
             runDOMController(iframeDocument)
         }
     }
-    const initializePage = () =>{
+    const initializePage = useCallback(() =>{
         applyCodeOnIframe({isDOMController:true});    
-    }
+    },[])
 
     useEffect(()=>{
-        if(isFetched){
-            ref.current.addEventListener("load",initializePage.bind(this))
+        if(isSuccess){
+            ref.current.addEventListener("load",initializePage)
             return ()=>{
                 try{
-                    (ref.current as HTMLIFrameElement).removeEventListener("load",initializePage.bind(this));
+                    (ref.current as HTMLIFrameElement).removeEventListener("load",initializePage);
                 }catch(e){
 
                 }
             }
         }
-    },[isFetched]);
-    console.log(path,selector)
+    },[isSuccess]);
 
     return <div className='preview'><iframe src={path} ref={ref}></iframe></div>
 })

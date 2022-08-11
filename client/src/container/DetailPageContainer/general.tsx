@@ -1,7 +1,8 @@
+import React from "react";
 import { forwardRef, ReactNode, RefObject } from "react";
 import { useRecoilState } from "recoil";
 import BottomButton from "../../components/Styled/BottomButton";
-import { popupImageUploadSelector } from "../../recoils/pages";
+import { alertSelector, popupImageUploadSelector } from "../../recoils/pages";
 import copyClipboard from "../../util/copyClipboard";
 import ControlPaneContainer from "../ControlPane";
 import ImageUploaderPopup from "../Popup/ImageUploader";

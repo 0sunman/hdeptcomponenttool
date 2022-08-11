@@ -1,3 +1,4 @@
+import React from 'react';
 import PopupContainer from ".";
 import { useRecoilState } from "recoil";
 import { popupImageUploadSelector } from "../../recoils/pages";
@@ -8,9 +9,9 @@ import copyClipboard from "../../util/copyClipboard";
 
 const ImageUploaderPopup = () =>{
     const [visibleImageUploaderPopup, setVisibleImageUploaderPopup] = useRecoilState(popupImageUploadSelector);
-    const InitPopupDisplay = {general:"none",hyundai:"none"}
+    const InitPopupDisplay = {main:true, general:"none",hyundai:"none"}
     const closeImageUploaderPopup = () =>{ 
-        setVisibleImageUploaderPopup({...InitPopupDisplay,main:true}); 
+        setVisibleImageUploaderPopup({...InitPopupDisplay,main:false}); 
     }
     
     const doInnerHyundai = () =>{ 
@@ -21,9 +22,6 @@ const ImageUploaderPopup = () =>{
         setVisibleImageUploaderPopup({...InitPopupDisplay,general:"block"}); 
     }
 
-    useEffect(()=>{
-        doInnerHyundai();
-    },[])
 
     type ImageForm = {
         image:FileList

@@ -76,4 +76,4 @@ const Editor = ({title,content,path,selector,imgUrl,onChange,onClick,onImageChan
     )
 }
 
-export default Editor;
+export default React.memo(Editor);

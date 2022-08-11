@@ -1,11 +1,11 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import Editor from "../../components/Editor";
 import { ADD_CONTENTS } from "../../graphql/contents";
 import { graphqlFetcher } from "../../lib/queryClient";
-import { imgUrlSelector, writeSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, imgUrlSelector, writeSelector } from "../../recoils/pages";
 
 const writeContainer = () =>{
     const navigate = useNavigate();
@@ -15,16 +15,24 @@ const writeContainer = () =>{
     const [selector,setSelector] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [page, setPage] = useState('');
+    const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
+    const [alertText, setAlertText] =useRecoilState(alertTextSelector);
 
     const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content,imgUrl}),{
         onSuccess:()=>{
+            setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
             navigate("/");
         },
         onError:(e)=>{
-            console.log(e);
-            console.log("WriteContainer ::: 현재 에러가 발생중 이에요");
+            setAlertText("이런.. 작성중에 에러가 났네요");
+            throw new Error("이런, 에러가 나버렸네요")
         }
     });
+
+    useEffect(()=>{
+        setAlertFlag(true)
+        setAlertText("글쓰기 위한 환경을 준비중입니다!");
+    },[])
 
     const onChange = (e:SyntheticEvent) =>{
         const {name,value} = (e.target as HTMLInputElement);
@@ -41,23 +49,28 @@ const writeContainer = () =>{
         }
     }
     
-    const onClick = ()=>{
+    const onClick = useCallback(()=>{
         if(title.length > 10 && content.length > 10){
+            setAlertFlag(true)
+            setAlertText("서버로 글을 올리고 있어요");
             setPage({title,content,path,selector,imgUrl});
             addItem();
         }else{
-            alert("10자이상 입력해야함");
+            setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
         }
-    }
+    },[])
 
     const onImageChange = ({imageUrl}:{imageUrl:string})=>{
-        console.log(imageUrl);
         setImgUrl(imageUrl);
-        alert("이미지가 업데이트 되었습니다.");
+        setAlertFlag(true)
+        setAlertText("이미지가 업데이트 되었습니다.");
     }
 
 
     const attr = {title,content,path,selector,onChange,onClick,onImageChange,imgUrl,mode:"gen"}
+
+
+    setAlertFlag(false);
     return (
         <Editor {...attr}></Editor>
     )
