@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
-import { forwardRef, ReactNode, RefObject, useRef } from "react";
-import { useRecoilState } from "recoil";
+import React from "react";
 import Popup from "../../components/Popup";
-import { popupImageUploadSelector } from "../../recoils/pages";
 
 
 const PopupContainer = ({children,visible,onClose}:{children:React.ReactNode,visible:string,onClose:any}) =>{

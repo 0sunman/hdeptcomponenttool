@@ -1,10 +1,10 @@
 import { Suspense, SyntheticEvent, useEffect } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
-import { graphqlFetcher, QueryKeys } from "../lib/queryClient";
+import { graphqlFetcher } from "../lib/queryClient";
 import { CurrentPageSelector, IdSelector, writeSelector } from "../recoils/pages";
 
 const Main = styled.div`
@@ -48,29 +48,12 @@ const GlobalLayout = ()=>{
     const {title,content,path,selector} = page;
 
     const navigate = useNavigate();
-    const {mutate:removeItem} = useMutation((id:string)=>graphqlFetcher(REMOVE_CONTENT,{id}),{
-        onSuccess:()=>{
-            navigate("/")
-        }
-    });
-    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content}),{
-        onSuccess:()=>{
-            navigate("/");
-        }
-    });
-    const onRemove = () =>{
-        removeItem(id);
-    }
+
     
     useEffect(()=>{
         setCurrentPage(location.pathname);
     },[location])
     
-    useEffect(()=>{
-        if(page.title !== "" && page.content !== ""){
-            addItem();
-        }
-    },[page])
     return (
     <div>
         <Header>

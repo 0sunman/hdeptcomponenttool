@@ -1,16 +1,26 @@
-import { SyntheticEvent, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import styled from "styled-components";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import Editor from "../../components/Editor";
+import { ADD_CONTENTS } from "../../graphql/contents";
+import { graphqlFetcher } from "../../lib/queryClient";
 import { writeSelector } from "../../recoils/pages";
 
 const writeContainer = () =>{
-    
+    const navigate = useNavigate();
     const [title,setTitle] = useState('');
     const [content,setContent] = useState('');
     const [path,setPath] = useState('');
     const [selector,setSelector] = useState('');
-    const setPage = useSetRecoilState(writeSelector);
+    const [page, setPage] = useRecoilState(writeSelector);
+
+    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content}),{
+        onSuccess:()=>{
+            navigate("/");
+        }
+    });
+
     const onChange = (e:SyntheticEvent) =>{
         const {name,value} = (e.target as HTMLInputElement);
         if(name == "title"){
@@ -27,6 +37,7 @@ const writeContainer = () =>{
     const onClick = ()=>{
         if(title.length > 10 && content.length > 10){
             setPage({title,content,path,selector});
+            addItem();
         }else{
             alert("10자이상 입력해야함");
         }

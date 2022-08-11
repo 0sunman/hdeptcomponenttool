@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { controlPaneSizeSelector } from "../../recoils/pages";
 import styled from "styled-components";
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const ControlList = styled.div`
     display:flex;

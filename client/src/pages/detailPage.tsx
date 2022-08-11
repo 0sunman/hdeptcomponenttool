@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DetailPageContainer from "../container/DetailPageContainer";
 
 const DetailPage = ()=>{

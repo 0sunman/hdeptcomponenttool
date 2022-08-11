@@ -1,8 +1,5 @@
-import { forwardRef, ReactNode, RefObject, SyntheticEvent, useEffect } from "react";
-import { useQuery } from "react-query";
+import { forwardRef, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { GET_TYPES } from "../../graphql/types";
-import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
 import { codeSelector, popupImageUploadSelector } from "../../recoils/pages";
 import copyClipboard from "../../util/copyClipboard";
 import ControlPaneContainer from "../ControlPane";

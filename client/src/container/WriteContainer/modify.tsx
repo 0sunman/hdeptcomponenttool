@@ -1,14 +1,14 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import styled from "styled-components";
 import Editor from "../../components/Editor";
-import { MODIFY_CONTENT } from "../../graphql/contents";
+import { MODIFY_CONTENT, REMOVE_CONTENT } from "../../graphql/contents";
 import { graphqlFetcher } from "../../lib/queryClient";
-import { codeSelector, controlPaneSizeSelector, IdSelector, writeSelector } from "../../recoils/pages";
+import { codeSelector, IdSelector, writeSelector } from "../../recoils/pages";
 
 const ModifyContainer = ({title,content,path,selector}:{title:string,content:string,path:string,selector:string}) =>{
-    
+    const navigate = useNavigate();
     const [ptitle,setTitle] = useState(title);
     const [pcontent,setContent] = useState(content);
     const [ppath,setPath] = useState(path);
@@ -22,9 +22,18 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
         },
         onSuccess:(data)=>{
             alert("수정 완료!");
-//            console.log(data);
         }
     });
+    const {mutate:removeItem} = useMutation((id:string)=>graphqlFetcher(REMOVE_CONTENT,{id}),{
+        onSuccess:()=>{
+            navigate("/")
+        }
+    });
+    const onRemove = () =>{
+        if(confirm("삭제하실건가요?") == true){
+            removeItem(id);
+        }
+    }
     const onChange = (e:SyntheticEvent) =>{
         const {name,value} = (e.target as HTMLInputElement);
         if(name == "title"){
@@ -46,14 +55,10 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
         modifyItem();
     }
 
-    const attr = {title:ptitle,content:pcontent,path:ppath,selector:pselector,onChange,onClick,mode:"dev"}
+    const attr = {title:ptitle,content:pcontent,path:ppath,selector:pselector,onChange,onClick,mode:"dev",onRemove}
     return (
         <Editor {...attr}></Editor>
     )
 }
 
 export default ModifyContainer;
-
-function MODIFY_CONTENTS(MODIFY_CONTENTS: any, arg1: { title: string; path: string; selector: string; content: string; }): Promise<any> {
-    throw new Error("Function not implemented.");
-}

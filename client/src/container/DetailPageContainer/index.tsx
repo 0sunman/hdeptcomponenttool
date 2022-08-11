@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -13,13 +13,14 @@ import DevContainer from "./dev";
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const param = useParams<string>();
     const iframe = useRef<HTMLIFrameElement>(null);
-    const [idState, setIdState] = useRecoilState<string>(IdSelector);
-    const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
-    const [selector,setSelector] = useRecoilState<string>(selectorSelector);
+    const [idState,  setIdState] = useRecoilState<string>(IdSelector);
+    const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
+    const [selector, setSelector] = useRecoilState<string>(selectorSelector);
     const [path,setPath] = useRecoilState<string>(pathSelector);
     const {id}=param;
     useEffect(()=>{
-        setIdState(id);
+        console.log(id);
+        setIdState(id as string);
     },[id]);
     const {data,isFetched} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{onSuccess:({content})=>{
         setCodeData(content[0].content)
