@@ -2,6 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import ImageUploader from "../../container/ImageUpload/ImageUploader";
+import BottomButton from "../Styled/BottomButton";
 
 
 const StyledInput = styled.div`
@@ -17,17 +18,6 @@ font-size:18px;
 padding-bottom:200px;
 `
 
-const StyledButton = styled.div`
-
-& button{
-    display:block;
-    width:100%;
-    height:50px;    
-    position:fixed;
-    left:0;
-    bottom:0;
-}
-`
 
 
 const StyledButtonTwoblock = styled.div`
@@ -80,7 +70,7 @@ const Editor = ({title,content,path,selector,imgUrl,onChange,onClick,onImageChan
                     <button onClick={onClick}>수정</button>
                 </StyledButtonTwoblock>
                     :
-                <StyledButton><button onClick={onClick}>등록</button></StyledButton>
+                <BottomButton><button onClick={onClick}>등록</button></BottomButton>
             }
         </div>
     )

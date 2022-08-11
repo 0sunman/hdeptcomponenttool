@@ -23,6 +23,10 @@ const ModifyContainer = ({title,content,path,selector,imgUrl}:{title:string,cont
         },
         onSuccess:(data)=>{
             alert("수정 완료!");
+        },
+        onError:(e)=>{
+            console.log("현재 에러가 발생중이에요")
+            console.log(e);
         }
     });
     const {mutate:removeItem} = useMutation((id:string)=>graphqlFetcher(REMOVE_CONTENT,{id}),{

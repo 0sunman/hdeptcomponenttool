@@ -9,6 +9,8 @@ import DetailPageComponent from "../../components/DetailPage";
 import PreviewContainer from "../Preview";
 import GeneralContainer from "./general";
 import DevContainer from "./dev";
+import Popup from "../../components/Popup";
+import Alert from "../../components/Popup/alert";
 
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const param = useParams<string>();
@@ -23,26 +25,38 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
         setIdState(id as string);
     },[id]);
     const {data,isFetched} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{onSuccess:({content})=>{
-        setCodeData(content[0].content)
+        if(content.length > 0){
+            setCodeData(content[0].content)
+        }else{
+            throw Error("저런 에러가 났어요..");
+        }
+    },onError:(e)=>{
+        console.log(e);
+        console.log("저런 에러가 났어요..")
     }})
 
     
 
     if(isFetched){
-        return (
-        <DetailPageComponent>
-            <PreviewContainer isFetched={isFetched} ref={iframe} selector={data.content[0].selector} path={data.content[0].path}/>
-            {pageType=== "general" ? (
-                <GeneralContainer ref={iframe}></GeneralContainer>
-            ): pageType ==="dev" ? (
-                <DevContainer ref={iframe} data={data}></DevContainer>
-            ):(<div>Type ERROR</div>)}
-        </DetailPageComponent>
-        )
+        if(data.content && data.content.length > 0){
+            return (
+            <DetailPageComponent>
+                <PreviewContainer isFetched={isFetched} ref={iframe} selector={data.content[0].selector} path={data.content[0].path}/>
+                {pageType=== "general" ? (
+                    <GeneralContainer ref={iframe}></GeneralContainer>
+                ): pageType ==="dev" ? (
+                    <DevContainer ref={iframe} data={data}></DevContainer>
+                ):(<div>Type ERROR</div>)}
+            </DetailPageComponent>
+            )
+        }else{
+            return (
+                <div></div>
+            )
+        }
+
     }else{
-        return (<div>
-            <h2>올바르지 않은 아이디 값 입니다.</h2>
-        </div>)
+        return (<div></div>)
     }
 
 }

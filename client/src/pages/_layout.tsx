@@ -3,9 +3,10 @@ import { useMutation } from "react-query";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import Alert from "../components/Popup/alert";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
 import { graphqlFetcher } from "../lib/queryClient";
-import { CurrentPageSelector, IdSelector, writeSelector } from "../recoils/pages";
+import { CurrentPageSelector, IdSelector, writeSelector, errorSelector } from "../recoils/pages";
 
 const Main = styled.div`
     position:absolute; width:100%;
@@ -46,6 +47,7 @@ const GlobalLayout = ()=>{
     const [currentPage, setCurrentPage] = useRecoilState(CurrentPageSelector);
     const [page, setPage] =useRecoilState(writeSelector);
     const {title,content,path,selector} = page;
+    const [error, isError] =useRecoilState(errorSelector);
 
     const navigate = useNavigate();
 
@@ -76,9 +78,9 @@ const GlobalLayout = ()=>{
             <Suspense fallback={'loading'}>
                 <Outlet/>
             </Suspense>
-                <div>                
-                </div>
+            
         </Main>
+        <Alert visible={error}><p>서버에서 데이터를 가져오고 있어요.</p></Alert>
     </div>
     
     )

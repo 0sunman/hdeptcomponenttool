@@ -1,8 +1,34 @@
 import {atom, selector} from "recoil";
-export const SiteInfo = atom({
+type SiteInfo = {
+    "id":string,
+    "error":boolean,
+    "currentPage" : string,
+    "page":{
+        "path":string,
+        "title":string,
+        "selector":string,
+        "content":string,
+        "imgUrl":string
+    },
+    "code":string,
+    "control":{
+        paneSize:20,
+        device:("pc"|"mo")
+    },
+    "popup":{
+        imgUpload:{
+            main:string,
+            hyundai:string,
+            general:string
+        }
+    }
+
+}
+export const SiteInfo = atom<SiteInfo>({
     key:"SiteInfo",
     default:{
         "id":"",
+        "error":true,
         "currentPage" : "index",
         "page":{
             "path":"",
@@ -38,6 +64,13 @@ export const IdSelector = selector({
     get:({get})=>(get(SiteInfo).id),
     set:({set,get},newValue)=>{
         set(SiteInfo, prev => ({...prev,"id":newValue}))
+    }
+})
+export const errorSelector = selector<boolean>({
+    key:"errorSelector",
+    get:({get})=>(get(SiteInfo).id),
+    set:({set,get},newValue)=>{
+        set(SiteInfo, prev => ({...prev,"error":newValue}))
     }
 })
 export const writeSelector = selector({
@@ -88,7 +121,7 @@ export const controlPaneSizeSelector = selector({
 
 
 export const deviceSelector = selector({
-    key:"controlPaneSizeSelector",
+    key:"deviceSelector",
     get:({get})=>(get(SiteInfo).control.device),
     set:({set,get,reset},newValue)=>{
         set(SiteInfo, prev =>({...prev,"control":{device:newValue}}))

@@ -10,7 +10,7 @@ const ImageUploaderPopup = () =>{
     const [visibleImageUploaderPopup, setVisibleImageUploaderPopup] = useRecoilState(popupImageUploadSelector);
     const InitPopupDisplay = {general:"none",hyundai:"none"}
     const closeImageUploaderPopup = () =>{ 
-        setVisibleImageUploaderPopup({...InitPopupDisplay,main:"none"}); 
+        setVisibleImageUploaderPopup({...InitPopupDisplay,main:true}); 
     }
     
     const doInnerHyundai = () =>{ 

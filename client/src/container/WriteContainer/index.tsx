@@ -19,6 +19,10 @@ const writeContainer = () =>{
     const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content,imgUrl}),{
         onSuccess:()=>{
             navigate("/");
+        },
+        onError:(e)=>{
+            console.log(e);
+            console.log("WriteContainer ::: 현재 에러가 발생중 이에요");
         }
     });
 

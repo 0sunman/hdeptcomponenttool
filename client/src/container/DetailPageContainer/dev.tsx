@@ -8,7 +8,7 @@ import ModifyContainer from "../WriteContainer/modify";
 
 const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 */
 
-    const {title,content,path,selector} = props.data.content[0]; 
+    const {title,content,path,selector,imgUrl} = props.data.content[0]; 
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const doCopyClipboard = () => {
         if(ref !== null && ref!.current !== null){
@@ -26,7 +26,7 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
 
         }
     },[codeData])
-    const attr = {title,content,path,selector};
+    const attr = {title,content,path,selector,imgUrl};
     return (
         <div>
             <ImageUploaderPopup/>
