@@ -68,7 +68,7 @@ const Editor = ({title,content,path,selector,imgUrl,onChange,onClick,onImageChan
             <StyledInput><input name='title' type='text' onChange={onChange} placeholder="제목" value={title}/> </StyledInput>
             <StyledInput>
                 <ImageUploader onImageChange={onImageChange}></ImageUploader>
-                <input name='imgUrl' type='text' onChange={onChange} placeholder="대표 이미지 URL" value={imgUrl}/>
+                <input name='imgUrl' type='hidden' placeholder="대표 이미지 URL" value={imgUrl}/>
             </StyledInput>
             <StyledInput><input name='path' type='text' onChange={onChange} placeholder="템플릿 경로" value={path}/></StyledInput>
             <StyledInput><input name='selector' type='text' onChange={onChange} placeholder="제어 영역 셀렉터" value={selector}/></StyledInput>

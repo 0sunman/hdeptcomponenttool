@@ -29,7 +29,6 @@ const ImageUploader = ({onImageChange}:{onImageChange:any}) =>{
         <form onSubmit={handleSubmit(onValid)}>
             <input type="file" {...register("image")}/>
             <input type="submit"></input>
-            <input type="hidden"></input>
         </form>
     )
 
