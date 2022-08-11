@@ -19,9 +19,9 @@ const ListItem = styled.li`
     border-bottom:1px solid #e8e8e8;
     overflow:hidden;
     background: url(${(props:{imgUrl:string}) => props.imgUrl});
-    background-size: contain;
+    background-size: 60%;
     background-repeat: no-repeat;
-    background-position: 50%;
+    background-position: 50% 50%;
     & a{
         display: block;
         position: absolute;

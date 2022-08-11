@@ -8,7 +8,8 @@ export const SiteInfo = atom({
             "path":"",
             "title":"",
             "selector":"",
-            "content":""
+            "content":"",
+            "imgUrl":""
         },
         "code":"",
         "control":{
@@ -53,6 +54,16 @@ export const pathSelector = selector({
         set(SiteInfo, prev =>({...prev,"page":{"path":newValue}}))
     }
 })
+
+
+export const imgUrlSelector = selector({
+    key:"imgUrlSelector",
+    get:({get})=>(get(SiteInfo).page.path),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, prev =>({...prev,"imgUrl":{"imgUrl":newValue}}))
+    }
+})
+
 export const selectorSelector = selector({
     key:"selectorSelector",
     get:({get})=>(get(SiteInfo).page.selector),

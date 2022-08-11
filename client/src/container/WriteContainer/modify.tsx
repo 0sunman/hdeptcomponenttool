@@ -7,16 +7,17 @@ import { MODIFY_CONTENT, REMOVE_CONTENT } from "../../graphql/contents";
 import { graphqlFetcher } from "../../lib/queryClient";
 import { codeSelector, IdSelector, writeSelector } from "../../recoils/pages";
 
-const ModifyContainer = ({title,content,path,selector}:{title:string,content:string,path:string,selector:string}) =>{
+const ModifyContainer = ({title,content,path,selector,imgUrl}:{title:string,content:string,path:string,selector:string,imgUrl:string}) =>{
     const navigate = useNavigate();
     const [ptitle,setTitle] = useState(title);
     const [pcontent,setContent] = useState(content);
     const [ppath,setPath] = useState(path);
     const [pselector,setSelector] = useState(selector);
+    const [pimgUrl,setImgUrl] = useState(imgUrl);
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const setPage = useSetRecoilState(writeSelector);
     const id:string = useRecoilValue(IdSelector);
-    const {mutate:modifyItem} = useMutation(()=>graphqlFetcher(MODIFY_CONTENT,{id, title:ptitle,path:ppath,selector:pselector,content:pcontent}),{
+    const {mutate:modifyItem} = useMutation(()=>graphqlFetcher(MODIFY_CONTENT,{id, title:ptitle,path:ppath,selector:pselector,imgUrl:pimgUrl,content:pcontent}),{
         onMutate:(data)=>{
             console.log(data);
         },
@@ -44,6 +45,8 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
             setPath(value);
         }else if(name == "selector"){
             setSelector(value);
+        }else if(name == "imgUrl"){
+            setImgUrl(value);
         }
     }
     useEffect(()=>{
@@ -54,8 +57,14 @@ const ModifyContainer = ({title,content,path,selector}:{title:string,content:str
         console.log([ptitle]);
         modifyItem();
     }
+    
+    const onImageChange = ({imageUrl}:{imageUrl:string})=>{
+        console.log(imageUrl);
+        setImgUrl(imageUrl);
+        alert("이미지가 업데이트 되었습니다.");
+    }
 
-    const attr = {title:ptitle,content:pcontent,path:ppath,selector:pselector,onChange,onClick,mode:"dev",onRemove}
+    const attr = {title:ptitle,content:pcontent,path:ppath,imgUrl:pimgUrl,selector:pselector,onChange,onClick,onImageChange,mode:"dev",onRemove}
     return (
         <Editor {...attr}></Editor>
     )

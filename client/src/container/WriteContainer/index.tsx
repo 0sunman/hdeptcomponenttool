@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import Editor from "../../components/Editor";
 import { ADD_CONTENTS } from "../../graphql/contents";
 import { graphqlFetcher } from "../../lib/queryClient";
-import { writeSelector } from "../../recoils/pages";
+import { imgUrlSelector, writeSelector } from "../../recoils/pages";
 
 const writeContainer = () =>{
     const navigate = useNavigate();
@@ -13,9 +13,10 @@ const writeContainer = () =>{
     const [content,setContent] = useState('');
     const [path,setPath] = useState('');
     const [selector,setSelector] = useState('');
-    const [page, setPage] = useRecoilState(writeSelector);
+    const [imgUrl, setImgUrl] = useState('');
+    const [page, setPage] = useState('');
 
-    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content}),{
+    const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content,imgUrl}),{
         onSuccess:()=>{
             navigate("/");
         }
@@ -31,20 +32,28 @@ const writeContainer = () =>{
             setPath(value);
         }else if(name == "selector"){
             setSelector(value);
+        }else if(name == "imgUrl"){
+            setImgUrl(value);
         }
     }
     
     const onClick = ()=>{
         if(title.length > 10 && content.length > 10){
-            setPage({title,content,path,selector});
+            setPage({title,content,path,selector,imgUrl});
             addItem();
         }else{
             alert("10자이상 입력해야함");
         }
     }
 
+    const onImageChange = ({imageUrl}:{imageUrl:string})=>{
+        console.log(imageUrl);
+        setImgUrl(imageUrl);
+        alert("이미지가 업데이트 되었습니다.");
+    }
 
-    const attr = {title,content,path,selector,onChange,onClick,mode:"gen"}
+
+    const attr = {title,content,path,selector,onChange,onClick,onImageChange,imgUrl,mode:"gen"}
     return (
         <Editor {...attr}></Editor>
     )

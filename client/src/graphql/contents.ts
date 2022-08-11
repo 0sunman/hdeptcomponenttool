@@ -8,7 +8,8 @@ export const GET_CONTENT = gql`
             content,
             path,
             selector,
-            data
+            data,
+            imgUrl
         }
 
     }
@@ -22,7 +23,8 @@ export const GET_CONTENTS = gql`
             title
             content
             selector
-            data
+            data,
+            imgUrl
         }
     }
 `
@@ -37,26 +39,28 @@ export const REMOVE_CONTENT = gql`
 `
 
 export const ADD_CONTENTS = gql`
-    mutation ADD_CONTENT($title: String, $content: String, $path:String, $selector:String){
-        addContent(title:$title, content:$content, path:$path, selector:$selector){
+    mutation ADD_CONTENT($title: String, $content: String, $path:String, $selector:String, $imgUrl:String){
+        addContent(title:$title, content:$content, path:$path, selector:$selector, imgUrl:$imgUrl){
             id,
             title,
             path,
             selector,
-            content
+            content,
+            imgUrl
         }
     }
 `
 
 export const MODIFY_CONTENT = gql`
-    mutation Mutation($id: String!, $content: String, $path: String, $selector: String, $title: String) {
-        modifyContent(id: $id, content: $content, path: $path, selector: $selector, title: $title) {
+    mutation Mutation($id: String!, $content: String, $path: String, $selector: String, $title: String, $imgUrl:String) {
+        modifyContent(id: $id, content: $content, path: $path, selector: $selector, title: $title, imgUrl:$imgUrl) {
         id
         path
         selector
         title
         content
         data
+        imgUrl
         }
   }
 `

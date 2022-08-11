@@ -89,7 +89,7 @@ table {
     height: 65px;
     border-bottom: 1px solid #000;
 }
-#html_controller .controller{height:calc(100% - 75px); overflow-y: scroll;}
+#html_controller .controller{height:calc(100% - 125px); overflow-y: scroll;}
 .imageUploader{ border-bottom:1px solid #000}
 #imgUrl {margin-top:10px; width:100%;}
 
