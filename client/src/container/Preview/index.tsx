@@ -5,7 +5,7 @@ import { codeSelector } from "../../recoils/pages";
 import runDOMController from "../../util/runDOMController";
 
 
-const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, selector:string, path:string}>((props,ref)=>{
+const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, selector:string, path:string, show:boolean}>((props,ref)=>{
     const {isSuccess, selector, path} = props;
     if(selector === undefined || path === undefined){
         return <div>Loading...</div>
@@ -35,7 +35,7 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, select
         }
     },[isSuccess]);
 
-    return <div className='preview'><iframe src={path} ref={ref}></iframe></div>
+    return <div className='preview'><iframe src={path} ref={ref} style={{"display":(props.show)?"block":"none"}}></iframe></div>
 })
 
 export default PreviewContainer;

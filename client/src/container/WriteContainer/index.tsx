@@ -15,9 +15,9 @@ const writeContainer = () =>{
     const [selector,setSelector] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [page, setPage] = useState('');
-    const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
-    const [alertText, setAlertText] =useRecoilState(alertTextSelector);
+    const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
 
+    
     const {mutate:addItem} = useMutation(()=>graphqlFetcher(ADD_CONTENTS,{title,path,selector,content,imgUrl}),{
         onSuccess:()=>{
             setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
@@ -49,16 +49,17 @@ const writeContainer = () =>{
         }
     }
     
-    const onClick = useCallback(()=>{
+    const onClick =()=>{ 
         if(title.length > 10 && content.length > 10){
             setAlertFlag(true)
             setAlertText("서버로 글을 올리고 있어요");
-            setPage({title,content,path,selector,imgUrl});
+            //setPage({title,content,path,selector,imgUrl});
             addItem();
         }else{
-            setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
+            setAlertFlag(true)
+            setAlertText("텍스트가 10자이상 있어야해요.");
         }
-    },[])
+    }
 
     const onImageChange = ({imageUrl}:{imageUrl:string})=>{
         setImgUrl(imageUrl);
@@ -69,8 +70,10 @@ const writeContainer = () =>{
 
     const attr = {title,content,path,selector,onChange,onClick,onImageChange,imgUrl,mode:"gen"}
 
-
-    setAlertFlag(false);
+    useEffect(()=>{
+        setAlertFlag(true);
+        setAlertText("글쓰는 페이지입니다.<br>도움말 모드는 개발 중이고,<br>궁금하신 것은 담당자에게 여쭤봐주세요!");
+    },[])
     return (
         <Editor {...attr}></Editor>
     )

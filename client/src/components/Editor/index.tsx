@@ -26,7 +26,6 @@ const StyledButtonTwoblock = styled.div`
     display:inline-block;
     width:20%;
     height:50px;    
-    position:fixed;
     left:0;
     bottom:0;
 }
@@ -35,7 +34,6 @@ const StyledButtonTwoblock = styled.div`
     display:inline-block;
     width:80%;
     height:50px;    
-    position:fixed;
     right:0;
     bottom:0;
 }

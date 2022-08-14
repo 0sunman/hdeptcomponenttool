@@ -14,6 +14,11 @@ import ListContainer from "../container/ListContainer";
 
 
 const MainPage = () => {
+    
+    const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
+    useEffect(()=>{
+    },[])
+
         return ( 
             <ListContainer></ListContainer>    
         )

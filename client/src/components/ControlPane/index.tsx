@@ -54,65 +54,6 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
                         <span className="text">이미지</span>
                     </ControlButton>
                     
-                    <ControlButton  onClick={()=>{
-                        if((device_list.current as HTMLDivElement).style.display === "flex"){
-                            (device_list.current as HTMLDivElement).style.display = "none";
-                        }else{
-                            (device_list.current as HTMLDivElement).style.display = "flex";
-                            (view_list.current as HTMLDivElement).style.display = "none"    
-                        }
-                    }}>
-                        <span className="material-symbols-outlined icon">devices</span>
-                        <span className="text">디바이스</span>
-                        <VerticalList className="devicecontrol" ref={device_list} style={{display:"none"}}>
-                            <ControlButton onClick={()=>switchDevice("pc")}>
-                                <span className="material-symbols-outlined icon">desktop_mac</span>
-                                <span className="text">PC</span>
-                            </ControlButton>
-                            <ControlButton onClick={()=>switchDevice("mo")}>
-                                <span className="material-symbols-outlined icon">phone_iphone</span>
-                                <span className="text">Mobile</span>
-                            </ControlButton>
-                        </VerticalList>
-                    </ControlButton>
-                    <ControlButton onClick={()=>{
-                        if((view_list.current as HTMLDivElement).style.display === "flex"){
-                            (view_list.current as HTMLDivElement).style.display = "none";
-                        }else{
-                            (device_list.current as HTMLDivElement).style.display = "none";
-                            (view_list.current as HTMLDivElement).style.display = "flex";    
-                        }
-                    }}>
-                        <span className="material-symbols-outlined icon">zoom_out_map</span>
-                        <span className="text">크기 조절</span>
-                        <VerticalList className="sizecontrol" ref={view_list} style={{display:"none"}}>
-                            
-                            <ControlButton onClick={()=>controlHeight(0)}>
-                                0%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(20)}>
-                                20%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(30)}>
-                                30%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(40)}>
-                                40%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(50)}>
-                                50%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(65)}>
-                                65%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(70)}>
-                                70%
-                            </ControlButton>
-                            <ControlButton onClick={()=>controlHeight(80)}>
-                                80%
-                            </ControlButton>
-                        </VerticalList>
-                    </ControlButton>
                     {currentType !== "dev" ? (
                     <ControlButton onClick={() => goTo("gen")}>
                         <span className="material-symbols-outlined icon">edit</span>

@@ -73,6 +73,7 @@ export const alertSelector = selector<boolean>({
     get:({get})=>(get(SiteInfo).alert.visible),
     set:({set,get},newValue)=>{
         set(SiteInfo, (prev):SiteInfo  => ({...prev,"alert":{...(prev.alert),"visible":newValue}}))
+        
     }
 })
 export const alertTextSelector = selector<string>({

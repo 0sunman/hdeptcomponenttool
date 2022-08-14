@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -38,8 +38,8 @@ const ListContainer = ()=>{
 
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
     const {data:list, isSuccess} = useQuery([QueryKeys.CONTENT,"view","all"],()=>graphqlFetcher(GET_CONTENTS),{
-    onSuccess:({data})=>{
-        
+    onSuccess:({data})=>{    
+        setAlertText("환영합니다!<br><br>모바일 페이지로는 현재 개발이 안돼있어서... 깨져나올거에요!<br>추후에 개발 예정이며<br>태블릿이나 PC로 오세요!");
     }, 
     onError:(e)=>{
         setAlertFlag(true)
@@ -47,10 +47,11 @@ const ListContainer = ()=>{
         console.log(e);
         throw Error("에러발생!!!")
     }});
-    setAlertText("컴포넌트들을 읽어오고 있습니다.");
-
+    useEffect(()=>{
+        setAlertText("컴포넌트들을 읽어오고 있습니다.");
+    },[])
     if(isSuccess){
-        setAlertFlag(false)
+        
         return (<div>   
             <ListComponent>
             {

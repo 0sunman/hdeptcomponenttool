@@ -36,16 +36,23 @@ const ModifyContainer = ({title,content,path,selector,imgUrl}:{title:string,cont
     });
     const {mutate:removeItem} = useMutation((id:string)=>graphqlFetcher(REMOVE_CONTENT,{id}),{
         onSuccess:()=>{
-            setAlertText("삭제 되었습니다. 홈으로 돌아가요.")
+            setAlertText("삭제 되었습니다. 3초후 홈으로 돌아가요.")
             setTimeout(()=>{
                 navigate("/")
             },3000)
         }
     });
     const onRemove = useCallback(() =>{
-        if(confirm("진짜 삭제하실건가요?") == true){
-            removeItem(id);
-        }
+        setAlertFlag(true)
+        setAlertText("삭제하겠습니다!");
+        setTimeout(()=>{
+            if(confirm("그런데... 진짜 삭제하실건가요?") == true){
+                removeItem(id);
+                setAlertText("그럼.. 진짜 삭제하겠습니다! (삭제중)");
+            }else{
+                setAlertText("확인을 누르시면 작업하시던 내용으로 돌아갑니다 :)");
+            }
+        },1000)
     },[])
     const onChange = useCallback((e:SyntheticEvent) =>{
         const {name,value} = (e.target as HTMLInputElement);
@@ -67,9 +74,15 @@ const ModifyContainer = ({title,content,path,selector,imgUrl}:{title:string,cont
     
     const onClick = useCallback(()=>{
         setAlertFlag(true)
-        console.log(alertFlag);
-        setAlertText("수정작업을 진행 중 입니다.");
-        modifyItem();
+        setAlertText("수정할게요!");
+        setTimeout(()=>{
+            if(confirm("그런데... 진짜 수정하실건가요? 원복하는 기능은 아직 없어요 ㅠㅠ") == true){
+                setAlertText("진짜.. 수정작업을 진행 중 입니다.");
+                modifyItem();
+            }else{
+                setAlertText("확인을 누르시면 작업하시던 내용으로 돌아갑니다 :)");
+            }
+        },1000)
     },[])
     
     const onImageChange = ({imageUrl}:{imageUrl:string})=>{

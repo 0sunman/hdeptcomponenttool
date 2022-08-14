@@ -24,7 +24,6 @@ const GeneralContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일�
             <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup}>
                 <div className="general">
                 </div>
-                <BottomButton><button onClick={()=>{}}>코드복사</button></BottomButton>
             </ControlPaneContainer>
         </div>
     )

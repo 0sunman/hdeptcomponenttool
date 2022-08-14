@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactNode } from "react";
 import { useRecoilState } from "recoil";
 import Popup from "../../components/Popup";
@@ -10,9 +10,16 @@ const Alert = () => {
     const onClose = () => {
         setAlertFlag(false);
     }
+    useEffect(()=>{
+        console.log(alertFlag, alertText)
+    },[alertFlag])
     
     return (<Popup visible={alertFlag} onClose={onClose}>
-                <div className="content"> {alertText} </div>
+                <div className="content"> 
+                <p dangerouslySetInnerHTML={{__html: alertText}}></p>
+                <button onClick={onClose}>확인</button>
+                </div>
+                
             </Popup>)
 }
 
