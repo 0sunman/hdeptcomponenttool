@@ -31,7 +31,7 @@ const ImageUploaderPopup = () =>{
         if(image && image.length > 0){
             const {
                 data : {uploadURL}
-            } = await axios.get("/api/uploadImage")
+            } = await axios.get("https://zerosunshop.herokuapp.com/api/uploadImage")
             console.log(uploadURL);
             const formData = new FormData();
             formData.append("file", image[0], "test");
