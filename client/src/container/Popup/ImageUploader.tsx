@@ -29,9 +29,10 @@ const ImageUploaderPopup = () =>{
     const {register, handleSubmit} = useForm<ImageForm>();
     const onValid = async ({image}:ImageForm) =>{
         if(image && image.length > 0){
+            
             const {
                 data : {uploadURL}
-            } = await axios.get("https://zerosunshop.herokuapp.com/api/uploadImage")
+            } = await axios.get("https://zerosunshop.herokuapp.com/uploadImage")
             console.log(uploadURL);
             const formData = new FormData();
             formData.append("file", image[0], "test");
