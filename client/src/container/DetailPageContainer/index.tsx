@@ -110,7 +110,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     if(isSuccess){
         const {content:[{selector,path}]}= data;
         return (
-            <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={TouchMoveEvent} onTouchStart={TouchStartEvent} onTouchEnd={MouseUpEvent}  onMouseUp={MouseUpEvent}>
+            <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={TouchMoveEvent}  onMouseUp={MouseUpEvent}>
                 <div className="frame"  style={{width:`${positionX}%`}}>
                     <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={path} show={show}/>
                     <div className="preview-load" style={{"display":(show)?"none":"flex"}}>
