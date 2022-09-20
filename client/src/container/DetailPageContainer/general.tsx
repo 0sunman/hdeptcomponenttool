@@ -290,61 +290,67 @@ type StyleMap = {
     }
 
     useEffect(()=>{
-        if(isPreviewDOMLoaded){
-            const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
-            iframeDocument.querySelector(selector)!.innerHTML = codeData;
+        try{
+            if(isPreviewDOMLoaded){
+                const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
+                iframeDocument.querySelector(selector)!.innerHTML = codeData;
+        
+                const testreturn = [...iframeDocument.querySelectorAll(".content-section *[data-target-control]")].map(element=>{  // 1. data-target-control을 찾음 
+                    try{
+                        const targetControl = element.dataset.targetControl;
+                        const [name,target] = targetControl.split("_");
+                        const targets = target.split("-");
+                        return [element,targets,name]; // 1차 가공
     
-            const testreturn = [...iframeDocument.querySelectorAll(".content-section *[data-target-control]")].map(element=>{  // 1. data-target-control을 찾음 
-                try{
-                    const targetControl = element.dataset.targetControl;
-                    const [name,target] = targetControl.split("_");
-                    const targets = target.split("-");
-                    return [element,targets,name]; // 1차 가공
-
-                }catch(error){
-                    console.error(error);
-                    return; // 1차 가공
-                }
-                  
-    
-            });
-            let cnt = 0;
-            const tempTotal: { key:number; element: any; target: any; name: any; style?: any;}[] = [];
-            testreturn.forEach((element)=>{ // 2. 평탄화 작업 시작
-                try{
-
-                    if(element[1].length > 1){
-                        element[1].forEach((ele:any) =>{
-                            let styleObj={};
-                            if(ele === "style"){
-                                styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                                tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], style:styleObj})
-                            }else{
-                                tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2]})
-                            }
-                            cnt++;
-                        })
-                    }else{
-                        
-                        let styleObj={};
-                        if(element[1][0] === "style"){
-                            styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                            tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], style:styleObj})
-                        }else{
-                            tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2]})
-                        }
-    
+                    }catch(error){
+                        console.error(error);
+                        return; // 1차 가공
                     }
-                    cnt++;
-                }catch(e){
-                    console.error(e)
-                }
-            })
-            setIframeDOM(tempTotal)
+                      
+        
+                });
+                let cnt = 0;
+                const tempTotal: { key:number; element: any; target: any; name: any; style?: any;}[] = [];
+                testreturn.forEach((element)=>{ // 2. 평탄화 작업 시작
+                    try{
+    
+                        if(element[1].length > 1){
+                            element[1].forEach((ele:any) =>{
+                                let styleObj={};
+                                if(ele === "style"){
+                                    styleObj = createStyleMap( element[0].getAttribute("style") ) 
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], style:styleObj})
+                                }else{
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2]})
+                                }
+                                cnt++;
+                            })
+                        }else{
+                            
+                            let styleObj={};
+                            if(element[1][0] === "style"){
+                                styleObj = createStyleMap( element[0].getAttribute("style") ) 
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], style:styleObj})
+                            }else{
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2]})
+                            }
+        
+                        }
+                        cnt++;
+                    }catch(e){
+                        console.error(e)
+                    }
+                })
+                setIframeDOM(tempTotal)
+            }
+            return ()=>{
+                setIsPreviewDOMLoaded(false);
+            }
+        }catch(e){
+            console.error(e);
+            
         }
-        return ()=>{
-            setIsPreviewDOMLoaded(false);
-        }
+
     },[isPreviewDOMLoaded,codeData])
 
     useEffect(()=>{
@@ -399,9 +405,9 @@ type StyleMap = {
                                     <div>
                                         {createTitle(name)}
                                         <span className="content-title">링크 주소</span>
-                                        <input  className='input' type='text' defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
+                                        <textarea  className='input' type='text' defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
                                             element.href = e.target.value;
-                                        }}></input>
+                                        }}></textarea>
                                     </div>
                                     )
 
@@ -410,9 +416,20 @@ type StyleMap = {
                                     <div>
                                         {createTitle(name)}
                                         <span className="control-title">텍스트</span>
-                                        <input type='text' defaultValue={element.innerText} className="control-input" onKeyUp={(e)=>{
+                                        <textarea type='text' defaultValue={element.innerText} className="control-input"
+                                        
+                                        onKeyUp={(e)=>{
                                             element.innerText = e.target.value;
-                                        }}></input>
+                                            
+                                            e.currentTarget.style.height = "12px";
+                                            e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+                                        }}
+
+                                        onFocus={(e)=>{                                            
+                                            e.currentTarget.style.height = "12px";
+                                            e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+
+                                        }}></textarea>
                                     </div>
                                     )
                                 
@@ -436,9 +453,9 @@ type StyleMap = {
                                     <div>
                                         {createTitle(name)}
                                         <span className="control-title">리소스 위치</span>
-                                        <input type='text' defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
+                                        <textarea type='text' defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
                                             element.src = e.target.value;
-                                        }}></input>
+                                        }}></textarea>
                                     </div>
                                     )                        
 

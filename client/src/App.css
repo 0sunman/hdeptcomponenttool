@@ -155,3 +155,6 @@ h3{ font-weight: bold; text-align: left; margin: 10px 0px; padding-left:5px; }
 .style-control h3{padding-bottom:5px; border-bottom: 2px solid #45675b;}
 .style-control{flex-direction: column;}
 .chrome-picker{box-shadow: none !important; margin-bottom:10px;}
+
+
+#html_controller .general textarea{width:70%; overflow: visible; margin-bottom: 10px;}

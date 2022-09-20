@@ -26,8 +26,6 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, select
     // }
     const initializePage = useCallback(() =>{
 //        debugger;
-//        
-        console.log(1);
         setIsPreviewDOMLoaded(true);
        // applyCodeOnIframe({isDOMController:true});    
     },[])
