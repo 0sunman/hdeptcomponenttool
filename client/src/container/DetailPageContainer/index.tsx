@@ -77,7 +77,15 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const [show, setShow] = useState<boolean>(true);
     const MouseMoveEvent = (e)=>{
         const {clientWidth, clientHeight} = document.body
-        const {clientX, clientY} = e
+        const {pageX, pageY} = e
+        if(flag){
+            setPositionX(((pageX-10)/clientWidth) * 100);
+        }
+    }
+
+    const TouchMoveEvent = (e)=>{
+        const {clientWidth, clientHeight} = document.body
+        const {clientX, ClientY} = e.changedTouches[0]
         if(flag){
             setPositionX(((clientX-10)/clientWidth) * 100);
         }
@@ -87,6 +95,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
         setFlag(true)
         setShow(false)
     }
+
+    const TouchStartEvent = ()=>{
+        handle.current.style.cursor = "col-resize"
+        setFlag(true)
+        setShow(false)
+    }
+
     const MouseUpEvent = ()=>{
         handle.current.style.cursor = "default"
         setFlag(false)
@@ -95,7 +110,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     if(isSuccess){
         const {content:[{selector,path}]}= data;
         return (
-            <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={MouseMoveEvent}  onMouseUp={MouseUpEvent}>
+            <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={TouchMoveEvent} onTouchStart={TouchStartEvent} onTouchEnd={MouseUpEvent}  onMouseUp={MouseUpEvent}>
                 <div className="frame"  style={{width:`${positionX}%`}}>
                     <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={path} show={show}/>
                     <div className="preview-load" style={{"display":(show)?"none":"flex"}}>
