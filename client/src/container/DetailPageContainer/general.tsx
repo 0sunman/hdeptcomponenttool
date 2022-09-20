@@ -526,16 +526,6 @@ type StyleMap = {
                                                                             }
                                                                         }))
                                                                     }}/>
-                                                                {/* <input type="text" defaultValue={style.font.color} onChange={(e)=>{
-                                                                    const fontColor = e.target.value;
-                                                                    setIframeDOM(changeStyle({
-                                                                        key,element,
-                                                                        type:"font",target:"color",value:fontColor,
-                                                                        callback:()=>{
-                                                                            element.style.color = fontColor;
-                                                                        }
-                                                                    }))
-                                                                }}></input> */}
                                                             </li>
                                                         </ul>)}
                                                         {style.font.align !== null && style.font.align !==undefined && (<ul>
@@ -851,9 +841,6 @@ type StyleMap = {
                                                     </div>}                                                    
                                                 </div>
                                             </div>
-                                            {/* <input type='text' defaultValue={element.getAttribute("style")} className="control-input" onKeyUp={(e)=>{
-                                                element.setAttribute("style", e.target.value);       
-                                            }}></input> */}
                                         </div>
                                     )
                             

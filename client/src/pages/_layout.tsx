@@ -20,8 +20,7 @@ const Header = styled.div`
     display:div; 
     height:40px; 
     line-height:40px;
-    border:0px solid #000; 
-    border-bottom:1px solid #000;
+    border:0;
     padding:0px;
     text-align:center;
 `
@@ -41,6 +40,9 @@ const Title = styled.span``
 const onChange = (e:SyntheticEvent)=>{
     const inputData = (e.target) as HTMLInputElement;
 }
+
+const LoginWrapper = styled.div`z-index:101; `
+const LoginForm = styled.form``;
 
 const GlobalLayout = ()=>{
     const location = useLocation();
@@ -79,6 +81,30 @@ const GlobalLayout = ()=>{
                 <Alert/>
             </Suspense>
         </Main>
+        
+        <LoginWrapper className="popup-bg">
+            <div className="popup login">
+                <div className="login">
+                    <h2>
+                        웹페이지 편집기 로그인
+                    </h2>
+                    <form>
+                        <div>
+                            <input type="text" placeholder="아이디"></input>
+                            <input type="text" placeholder="비밀번호"></input>
+                            <input type="text" placeholder="비밀번호 확인"></input>
+                        </div>
+                        <div>
+                            <button>로그인</button>
+                        </div>
+                        <div>
+                             <button>회원가입</button>
+                             <button>아이디 찾기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </LoginWrapper>
     </div>
     
     )

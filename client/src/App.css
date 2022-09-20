@@ -89,7 +89,7 @@ table {
 	padding-left: 0px;
 	position: absolute;
 	width: 100%;
-	height: calc(100% - 60px);
+	height: 100%;
 }
 #html_controller .dev > div {padding:10px}
 #html_controller .dev input{display:block; font-size:18px; }
@@ -119,7 +119,7 @@ table {
 #html_controller .controlpane span.text {font-size: 13px;}
 
 
-.resize-layout .frame:last-child{overflow-y: scroll;}
+.resize-layout .frame:last-child{overflow-y: scroll; overflow-x: hidden;}
 .imageUploader label{font-size:20px;padding:10px 0px;}
 .imageUploader input[type="file"]{ font-size: 20px; text-align: center; }
 
@@ -156,5 +156,23 @@ h3{ font-weight: bold; text-align: left; margin: 10px 0px; padding-left:5px; }
 .style-control{flex-direction: column;}
 .chrome-picker{box-shadow: none !important; margin-bottom:10px;}
 
+html, body{height:100vh}
+
 
 #html_controller .general textarea{width:70%; overflow: visible; margin-bottom: 10px;}
+@media (min-width: 787px){
+	.popup.login{width:40%}
+}
+.login{margin:0}
+.login *{margin:0}
+.login h2{text-align: left; margin:20px; font-size: 18px;}
+.login form {display:flex; flex-direction: column; margin:20px;}
+.login form{display: flex; flex-direction: row; flex-wrap: wrap;}
+.login form > div:first-child{width:75%; flex-direction: column;}
+.login form > div:nth-child(2){width:25%; flex-direction: column;}
+.login form > div:nth-child(2) > button { width:100%; height:100%; background-color: #000; color:#fff}
+.login form > div:last-child { display:flex; width:100%; margin-top:20px; align-items: center; justify-content: right;}
+.login form > div:last-child > button {display:inline-flex; border:1px solid #000; padding:2px 10px; font-size: 16px; background-color: #fff;}
+.login form > div:last-child > button:first-child{margin-right: 10px;}
+.login form input[type='text'] {display: flex;margin:0;  width:95%; height:46px;border:0; border-bottom: 1px solid #ddd;}
+.login form input[type='text']:first-child{margin-bottom:10px;}

@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { alertSelector, codeSelector, popupImageUploadSelector } from "../../recoils/pages";
+import { alertSelector, codeSelector, IFrameDOMSelector, popupImageUploadSelector } from "../../recoils/pages";
 import copyClipboard from "../../util/copyClipboard";
 import ControlPaneContainer from "../ControlPane";
 import ImageUploaderPopup from "../Popup/ImageUploader";
@@ -11,6 +11,7 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
     const {title,content,path,selector,imgUrl} = props.data.content[0]; 
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
+    const [iframeDOM,setIframeDOM]:any[] = useRecoilState<any[]>(IFrameDOMSelector);
     
     const doCopyClipboard = () => {
         if(ref !== null && ref!.current !== null){
@@ -37,6 +38,12 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
 
         }
     })
+    useEffect(()=>{
+        return ()=>{
+            setIframeDOM([])
+        }
+    },[])
+    
     const attr = {title,content,path,selector,imgUrl};
 
     return (

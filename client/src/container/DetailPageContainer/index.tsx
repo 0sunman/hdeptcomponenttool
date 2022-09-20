@@ -37,7 +37,8 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
             }
     },onError:(e)=>{
         setAlertText("저런 에러가 났어요");    
-        throw Error("저런 에러가 났어요")
+        console.error(e);
+        throw Error("저런 에러가 났어요");
     },retry:1})
 
     useEffect(()=>{
