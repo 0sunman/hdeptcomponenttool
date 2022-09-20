@@ -28,6 +28,15 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
 
         }
     },[codeData])
+
+    
+    useEffect(()=>{
+        try{
+            ((ref.current) as HTMLIFrameElement).contentDocument!.querySelector(".content-section")!.innerHTML = codeData
+        }catch(e){
+
+        }
+    })
     const attr = {title,content,path,selector,imgUrl};
 
     return (

@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import copyClipboard from "../../util/copyClipboard";
-import React from "react";
 import { useRecoilState } from "recoil";
 import { alertSelector, alertTextSelector } from "../../recoils/pages";
 
@@ -11,7 +9,7 @@ const ImageUploader = ({onImageChange}:{onImageChange:any}) =>{
         image:FileList
     }
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
-    const {register, handleSubmit, submit} = useForm<ImageForm>();
+    const {register, handleSubmit} = useForm<ImageForm>();
     const onValid = async ({image}:ImageForm) =>{
         setAlertFlag(true)
         setAlertText("이미지를 업로드 중입니다.");
@@ -26,13 +24,17 @@ const ImageUploader = ({onImageChange}:{onImageChange:any}) =>{
             const { data } = await axios.post(uploadURL, formData);
 
             onImageChange({imageUrl:data.result.variants[0]});
+            setAlertText("이미지를 업로드가 완료되었습니다!");
+        }else{
+            setAlertText("이미지 업로드 실패 ㅠㅠ");
         }
     }
 
     return(
-        <form className='imageUploader' onSubmit={handleSubmit(onValid)}>
-            <input id='Imagefile' type="file" {...register("image")}/>
-            <input type="submit" value="이미지 업로드"></input>
+        <form className='imageUploader'>
+            <input id='Imagefile' type="file" {...register("image")} onChange={e=>{
+                handleSubmit(onValid({image:e.target.files}));
+            }}/>
         </form>
     )
 

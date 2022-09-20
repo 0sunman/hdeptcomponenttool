@@ -1,7 +1,7 @@
 const runDOMController = (iframeDocument:Document)=>{
     const vdom = document.createDocumentFragment();
     document.querySelectorAll("#html_controller .general > div").forEach(element=>element.remove())
-    Array.prototype.slice.call(iframeDocument.querySelectorAll(".content-section *[data-target-control]")).every(element=>{
+    Array.prototype.slice.call(iframeDocument.querySelectorAll(".content-section *[data-target-control]")).every(element=>{  // 1. data-target-control을 찾음 
 
         const targetControl = element.dataset.targetControl;
         const [name,target] = targetControl.split("_");
@@ -45,7 +45,6 @@ const runDOMController = (iframeDocument:Document)=>{
                     })                   
                 break;
                 case "class":
-                    debugger;
                     titleElement.innerText = name +" 클래스"         
                     inputElement.value = element.getAttribute("className");      
                     inputElement.addEventListener("keyup",()=>{       

@@ -5,13 +5,9 @@ import { useRecoilState } from "recoil";
 import { GET_CONTENT } from "../../graphql/contents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
 import { alertSelector, alertTextSelector, codeSelector, IdSelector, pathSelector, selectorSelector } from "../../recoils/pages";
-import DetailPageComponent from "../../components/DetailPage";
 import PreviewContainer from "../Preview";
 import GeneralContainer from "./general";
 import DevContainer from "./dev";
-import Popup from "../../components/Popup";
-import Alert from "../../components/Popup/alert";
-import React from "react";
 import styled from "styled-components";
 
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
@@ -47,8 +43,12 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     useEffect(()=>{
         setAlertFlag(true);
         setAlertText("데이터를 세팅하고 있습니다.");    
+        
     },[])
 
+    useEffect(()=>{
+        console.log(data)
+    },[data])
 //     <DetailPageComponent>
 //     <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={path}/>
 //     {pageType=== "general" ? (
@@ -76,7 +76,6 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const [flag, setFlag] = useState<boolean>(false);
     const [show, setShow] = useState<boolean>(true);
     const MouseMoveEvent = (e)=>{
-        console.log("test")
         const {clientWidth, clientHeight} = document.body
         const {clientX, clientY} = e
         if(flag){
@@ -84,13 +83,11 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
         }
     }
     const MouseDownEvent = ()=>{
-        debugger
         handle.current.style.cursor = "col-resize"
         setFlag(true)
         setShow(false)
     }
     const MouseUpEvent = ()=>{
-        console.log("TEST");
         handle.current.style.cursor = "default"
         setFlag(false)
         setShow(true)
@@ -117,7 +114,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                 }}></div>
                 <div className="frame" style={{width:`${100-positionX}%`}} >
                     {pageType=== "general" ? (
-                        <GeneralContainer ref={iframe}></GeneralContainer>
+                        <GeneralContainer ref={iframe} selector={selector} path={path}></GeneralContainer>
                     ): pageType ==="dev" ? (
                         <DevContainer ref={iframe} data={data}></DevContainer>
                     ):(<div>Type ERROR</div>)}

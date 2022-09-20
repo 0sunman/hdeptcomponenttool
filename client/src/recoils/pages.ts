@@ -3,6 +3,7 @@ type SiteInfo = {
     "id":string,
     "alert":{visible:boolean,text:string},
     "currentPage" : string,
+    "isPreviewDOMLoaded":boolean,
     "page":Page,
     "code":string,
     "control":{
@@ -12,6 +13,7 @@ type SiteInfo = {
     "popup":{
         imgUpload:ImageUploader
     }
+    "IFrameDOM":[]
 
 }
 type Page = {
@@ -50,7 +52,9 @@ export const SiteInfo = atom<SiteInfo>({
                 hyundai:"none",
                 general:"none"
             }
-        }
+        },
+        "isPreviewDOMLoaded": false,
+        "IFrameDOM":[]
     }    
 })
 
@@ -143,5 +147,21 @@ export const codeSelector = selector({
     get:({get})=>(get(SiteInfo).code),
     set:({set,get,reset},newValue)=>{
         set(SiteInfo, (prev):SiteInfo =>({...prev,"code":newValue}))
+    }
+})
+
+
+export const isPreviewDOMLoadedSelector = selector<boolean>({
+    key:"isPreviewDOMLoadedSelector",
+    get:({get})=>(get(SiteInfo).isPreviewDOMLoaded),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, (prev):SiteInfo =>({...prev,"isPreviewDOMLoaded":newValue}))
+    }
+})
+export const IFrameDOMSelector = selector({
+    key:"IFrameDOMSelector",
+    get:({get})=>(get(SiteInfo).IFrameDOMSelector),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, (prev):SiteInfo =>({...prev,"IFrameDOMSelector":newValue}))
     }
 })

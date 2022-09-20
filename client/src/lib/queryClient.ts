@@ -12,7 +12,7 @@ export const getQueryClient = (()=>{
             defaultOptions:{
                 queries:{
                     retry:1,
-                    cacheTime:1000*60*60*24,
+                    cacheTime:0,
                     staleTime:1000,
                     refetchOnReconnect:false,
                     refetchOnWindowFocus:false,

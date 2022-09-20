@@ -49,7 +49,6 @@ table {
 	border-spacing: 0;
 }
 #html_controller .controller{height:calc(100% - 125px); overflow-y: scroll;}
-.imageUploader{ border-bottom:1px solid #000}
 #imgUrl {margin-top:10px; width:100%;}
 
 .popup-bg{display: flex;position: fixed; top:0; left:0; background-color: rgba(0,0,0,.5); z-index: 100; width: 100%; height: 100%; align-items: center; justify-content: center;}
@@ -110,17 +109,11 @@ table {
 	border-top:0px;
 }
 
-#html_controller .controller .general > div {flex-direction: column;}
-#html_controller .controller .general > div span {display: block;}
 
 
-#html_controller .general{display: flex; flex-direction: column; width: 100%; padding-top:10px;padding-bottom:100px;}
-#html_controller .general > div { display:flex; align-items:left; justify-content: center; width: 100%;margin:0; padding:0; white-space: nowrap; }
-#html_controller .general span{ display:inline-flex; align-items: center; padding-left:10px; margin-top:10px; margin-bottom:10px; padding-right:20px;  font-size: 18px; white-space:normal;word-wrap:break-word;}
-#html_controller .general input{ display:inline-flex; align-items: center; margin-left:10px; margin-bottom:10px;  padding-left:5px; width:90%; height:30px; background-color: #f1e3eb; border: 5px solid #45675b;}
 .frame .preview-load{ display: flex; align-items: center; justify-content: center; position: absolute; width:100%; height:100%; top:0; left:0; background-color: #f1e3eb; }
 .preview-load{font-size:40px}
-#html_controller .controlpane > div{flex-direction:row; justify-content: flex-start;;width: 100%;background-color: #45675b;}
+#html_controller .controlpane > div{flex-direction:row; justify-content: flex-start;;width: 100%;background-color: #45675b;     }
 #html_controller .controlpane button{ background-color: #45675b; border: 1px solid white; padding: 10px; color:white; height:100px; width:100px; margin-right:10px;}
 #html_controller .controlpane span {font-size: 38px;padding-bottom: 5px;}
 #html_controller .controlpane span.text {font-size: 13px;}
@@ -128,4 +121,34 @@ table {
 
 .resize-layout .frame:last-child{overflow-y: scroll;}
 .imageUploader label{font-size:20px;padding:10px 0px;}
-.imageUploader input[type="file"]{ font-size: 20px; text-align: center;}
+.imageUploader input[type="file"]{ font-size: 20px; text-align: center; }
+
+#html_controller .general{display: flex;  width: 100%; padding-bottom:100px; flex-wrap: wrap;}
+#html_controller .general > div { display:flex; flex-direction: row; align-items:middle; justify-content: left; width: 100%;margin:5px 0px; padding:0; flex-wrap: wrap;}
+#html_controller .general .group-title{width:100%; margin-bottom: 10px;}
+#html_controller .general span{ display:inline-flex; align-items: center; justify-content: left; margin:0; padding:0; padding-left:10px; border:0;width:20%;font-size: 14px; font-weight: bold; white-space:normal;word-wrap:break-word; margin-bottom:10px;}
+#html_controller .general input{ display:inline-flex; align-items: center;margin:0;padding:5px;padding:0;border:0;width:75%; height:30px; background-color: #fff; margin-bottom:10px;}
+#html_controller .general button{ display:inline-flex; align-items: center; justify-content: center;margin:0;padding:5px;padding:0;width:75%; height:30px; text-align:center; border:0px; margin-bottom:10px;}
+#html_controller .general button:hover{ background-color: #ffe3ff;}
+.general div:first-child div hr{display: none;}
+.general div hr{display: block; width: 100%; height: 25px; background-color: #45675b; border: 0; }
+.general div h2{padding:10px; font-weight: bold; border-bottom:5px solid #fff}
+
+#html_controller .general .style-group{flex-direction: row;}
+#html_controller .general .style-group, .style-control {display: flex; width:100%;}
+#html_controller .general .style-group > div:first-child{width:20%;}
+#html_controller .general .style-group > div:last-child{width:75%}
+#html_controller .general .style-component .style-group > div > span{width: auto;}
+/* #html_controller .general .style-group > div:first-child{text-align: center;} */
+#html_controller .general .style-control div ul li {display: flex;}
+#html_controller .general .style-control div ul li > span {width:20%; padding-left:5px; justify-content: left;}
+#html_controller .general .style-control div ul li > input.inputViewer{width:10%; text-align: center;}
+#html_controller .general .style-control div ul li > input {width:60%}
+#html_controller .general .style-control div ul li > input[type='range'] {margin-left:10px; }
+#html_controller .imageUploader input[type="file"]{width: 100%; font-size: 15px; margin: 0 !important; background-color: transparent;}
+#html_controller .imageUploader input[type="submit"]{width:20%;}
+h3{ font-weight: bold; text-align: left; margin: 10px 0px; padding-left:5px; }
+.style-control div:first-child h3{margin-top:0px;}
+.style-control h3{padding-bottom:5px; border-bottom: 2px solid #45675b;}
+.style-control{flex-direction: column;}
+.chrome-picker{box-shadow: none !important; margin-bottom:10px;}
