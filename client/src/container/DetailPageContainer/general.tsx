@@ -2,7 +2,7 @@ import React, { useEffect, useState,useRef, cloneElement } from "react";
 import { forwardRef, ReactNode, RefObject } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import BottomButton from "../../components/Styled/BottomButton";
-import { alertSelector, codeSelector,IFrameDOMSelector, isPreviewDOMLoadedSelector, popupImageUploadSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, codeSelector,IFrameDOMSelector, isPreviewDOMLoadedSelector, popupImageUploadSelector } from "../../recoils/pages";
 import copyClipboard from "../../util/copyClipboard";
 import ControlPaneContainer from "../ControlPane";
 import ImageUploaderPopup from "../Popup/ImageUploader";
@@ -22,6 +22,9 @@ const GeneralContainer = forwardRef<HTMLIFrameElement,{selector:string, path:str
     const {selector, path} = props;
     const [isPreviewDOMLoaded, setIsPreviewDOMLoaded] = useRecoilState<boolean>(isPreviewDOMLoadedSelector);
     const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
+    
+    const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
+    
     const doCopyClipboard = () => {
         if(ref !== null && ref!.current !== null){
             copyClipboard(((ref.current) as HTMLIFrameElement).contentDocument!.querySelector(".content-section")!.innerHTML)
@@ -291,6 +294,8 @@ type StyleMap = {
 
     useEffect(()=>{
         try{
+            setAlertFlag(true);
+            setAlertText("DOM을 읽어서 쉽게 만드는 중입니다.")
             if(isPreviewDOMLoaded){
                 const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
                 iframeDocument.querySelector(selector)!.innerHTML = codeData;
@@ -309,6 +314,7 @@ type StyleMap = {
                       
         
                 });
+                setAlertText("1차 가공 완료")
                 let cnt = 0;
                 const tempTotal: { key:number; element: any; target: any; name: any; style?: any;}[] = [];
                 testreturn.forEach((element)=>{ // 2. 평탄화 작업 시작
@@ -341,13 +347,20 @@ type StyleMap = {
                         console.error(e)
                     }
                 })
+                setAlertText("2차 가공 완료")
                 setIframeDOM(tempTotal)
+                
             }
+            setAlertText("데이터 세팅 완료! <br> 웹페이지 편집을 위해서 확인을 눌러주세요!")
+            setAlertFlag(false);
             return ()=>{
+                setAlertFlag(true);
+                setAlertText("다시 목록으로 돌아갑니다~")
                 setIsPreviewDOMLoaded(false);
             }
         }catch(e){
             console.error(e);
+            setAlertText("DOM을 로드하다가 에러가 나버렸습니다. 뭐가 문제일까...")
             
         }
 

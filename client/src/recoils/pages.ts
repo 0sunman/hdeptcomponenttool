@@ -1,5 +1,8 @@
 import {atom, selector} from "recoil";
 type SiteInfo = {
+    "isLoginPopup":boolean,
+    "userid":string,
+    "isLogin":boolean,
     "id":string,
     "alert":{visible:boolean,text:string},
     "currentPage" : string,
@@ -31,6 +34,9 @@ type ImageUploader = {
 export const SiteInfo = atom<SiteInfo>({
     key:"SiteInfo",
     default:{
+        "isLoginPopup":true,
+        "userid":"",
+        "isLogin":true,
         "id":"",
         "alert":{visible:true,text:""},
         "currentPage" : "index",
@@ -163,5 +169,35 @@ export const IFrameDOMSelector = selector({
     get:({get})=>(get(SiteInfo).IFrameDOMSelector),
     set:({set,get,reset},newValue)=>{
         set(SiteInfo, (prev):SiteInfo =>({...prev,"IFrameDOMSelector":newValue}))
+    }
+})
+
+export const UserIdState = selector({
+    key:"UserIdState",
+    get:({get})=>get(SiteInfo).userid,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "string"){
+            set(SiteInfo,{...get(SiteInfo), "userid":newValue})
+        }
+    }
+})
+
+export const UserLoginPopupState = selector({
+    key:"UserLoginPopupState",
+    get:({get})=>get(SiteInfo).isLoginPopup,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "boolean"){
+            set(SiteInfo,{...get(SiteInfo), "isLoginPopup":newValue})
+        }
+    }
+})
+
+export const UserLoginState = selector({
+    key:"UserLoginState",
+    get:({get})=>get(SiteInfo).isLogin,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "boolean"){
+            set(SiteInfo,{...get(SiteInfo), "isLogin":newValue})
+        }
     }
 })

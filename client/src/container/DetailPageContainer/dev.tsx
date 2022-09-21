@@ -1,6 +1,7 @@
 import { forwardRef, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { alertSelector, codeSelector, IFrameDOMSelector, popupImageUploadSelector } from "../../recoils/pages";
+import useLogin from "../../lib/useLogin";
+import { alertSelector, codeSelector, IFrameDOMSelector, popupImageUploadSelector, UserLoginState } from "../../recoils/pages";
 import copyClipboard from "../../util/copyClipboard";
 import ControlPaneContainer from "../ControlPane";
 import ImageUploaderPopup from "../Popup/ImageUploader";
@@ -8,6 +9,8 @@ import ModifyContainer from "../WriteContainer/modify";
 
 const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 */
 
+    const [isLoginState] = useLogin();
+    const [isLogin, setIsLogin] = useRecoilState(UserLoginState);
     const {title,content,path,selector,imgUrl} = props.data.content[0]; 
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
@@ -38,6 +41,10 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
 
         }
     })
+    useEffect(()=>{
+        setIsLogin(isLoginState);
+    },[isLoginState]);
+    
     useEffect(()=>{
         return ()=>{
             setIframeDOM([])

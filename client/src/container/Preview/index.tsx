@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { ForwardedRef, forwardRef, RefObject, useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { codeSelector, isPreviewDOMLoadedSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, codeSelector, isPreviewDOMLoadedSelector } from "../../recoils/pages";
 
 /*
     PreviewContainer
@@ -15,6 +15,7 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, select
     }
     const codeData = useRecoilValue<string>(codeSelector);
     const [isPreviewDOMLoaded, setIsPreviewDOMLoaded] = useRecoilState<boolean>(isPreviewDOMLoadedSelector);
+    const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
     //console.log(codeData);
     // const applyCodeOnIframe = ({isDOMController}:{isDOMController?:Boolean}) =>{
     //     const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
@@ -26,20 +27,36 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, select
     // }
     const initializePage = useCallback(() =>{
 //        debugger;
-        setIsPreviewDOMLoaded(true);
+        try{
+            setIsPreviewDOMLoaded(true);
+        }catch(e){
+            setAlertFlag(true);
+            setAlertText("저런.. 문서 로드중에 에러가 났네요..");
+            console.error(e);
+        }
        // applyCodeOnIframe({isDOMController:true});    
     },[])
 
     useEffect(()=>{
-        if(isSuccess){ // 케이스2 : 성공할 경우
-            ref.current.addEventListener("load",initializePage)
-            return ()=>{
-                try{
-                    (ref.current as HTMLIFrameElement).removeEventListener("load",initializePage);
-                }catch(e){
-
+        setAlertFlag(true);
+        setAlertText("DOM을 화면에 출력하고 있어요.");
+        try{
+            if(isSuccess){ // 케이스2 : 성공할 경우
+                ref.current.addEventListener("load",initializePage)
+                setAlertText("DOM을 화면에 출력완료!");
+                setAlertFlag(false);
+                return ()=>{
+                    try{
+                        (ref.current as HTMLIFrameElement).removeEventListener("load",initializePage);
+                    }catch(e){
+                        console.error(e);
+                    }
                 }
             }
+        }catch(e){
+            setAlertText("DOM을 화면에 출력 실패 ㅠㅠ");
+            console.error(e);
+
         }
     },[isSuccess]);
 

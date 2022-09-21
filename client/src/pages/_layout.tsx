@@ -6,8 +6,10 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Alert from "../components/Popup/alert";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
+import { IS_LOGIN, LOGIN_USER, LOGOUT_USER } from "../graphql/users";
 import { graphqlFetcher } from "../lib/queryClient";
-import { CurrentPageSelector, IdSelector, writeSelector, alertSelector, alertTextSelector } from "../recoils/pages";
+import { CurrentPageSelector, IdSelector, writeSelector, alertSelector, alertTextSelector,UserLoginState } from "../recoils/pages";
+import arrToObj from "../util/arrToObj";
 
 const Main = styled.div`
     position:absolute; width:100%;
@@ -41,18 +43,26 @@ const onChange = (e:SyntheticEvent)=>{
     const inputData = (e.target) as HTMLInputElement;
 }
 
-const LoginWrapper = styled.div`z-index:101; `
-const LoginForm = styled.form``;
 
 const GlobalLayout = ()=>{
     const location = useLocation();
+    const [isLogin,setIsLogin] = useRecoilState(UserLoginState);
     const id = useRecoilValue(IdSelector);
     const [currentPage, setCurrentPage] = useRecoilState(CurrentPageSelector);
     const [page, setPage] =useRecoilState(writeSelector);
     const {title,content,path,selector} = page;
-
+    const userid = window.localStorage.getItem("userid");
     const navigate = useNavigate();
 
+    const {mutate:logout} = useMutation(()=>graphqlFetcher(LOGOUT_USER,{
+        userid
+    }),{onSuccess:()=>{
+        window.localStorage.removeItem("userid");
+        window.localStorage.removeItem("token");
+        setIsLogin(false);
+    },onError:(err)=>{
+        console.log(err);
+    }}) 
     
     useEffect(()=>{
         setCurrentPage(location.pathname);
@@ -67,7 +77,7 @@ const GlobalLayout = ()=>{
                 
                 </Title>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
-                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button></div>}
+                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button> <button onClick={()=>logout()}>로그아웃</button></div>}
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
                             <Link to='/' style={{color:"white"}}>목록으로</Link>
@@ -81,30 +91,6 @@ const GlobalLayout = ()=>{
                 <Alert/>
             </Suspense>
         </Main>
-        
-        <LoginWrapper className="popup-bg">
-            <div className="popup login">
-                <div className="login">
-                    <h2>
-                        웹페이지 편집기 로그인
-                    </h2>
-                    <form>
-                        <div>
-                            <input type="text" placeholder="아이디"></input>
-                            <input type="text" placeholder="비밀번호"></input>
-                            <input type="text" placeholder="비밀번호 확인"></input>
-                        </div>
-                        <div>
-                            <button>로그인</button>
-                        </div>
-                        <div>
-                             <button>회원가입</button>
-                             <button>아이디 찾기</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </LoginWrapper>
     </div>
     
     )
