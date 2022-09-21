@@ -8,11 +8,12 @@ import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
 import { alertSelector, alertTextSelector } from "../../recoils/pages";
 
 const ListComponent = styled.ul`
-    display:block;width:100%;list-style:none;margin:0px;padding:0px;
-`
+    display:block;width:100%;list-style:none;margin:0px;padding:0px;text-align:center;
+` 
 
 const ListItem = styled.li`
-    display:block;width:100%;height:300px;
+    display:inline-block;width:30%;height:250px;
+    margin:5px;
     position: relative;
     text-align:center;
     font-size:15px;
@@ -31,7 +32,7 @@ const ListItem = styled.li`
         background-color: rgba(0,0,0,.5);
         color: white;
         font-size: 15px;
-        padding: 15px;
+        padding: 15px 0px;
     }
 `
 
@@ -81,7 +82,7 @@ const ListContainer = ()=>{
         const result = [...list.contents];
         return (<div>   
 
-    <SearchItem>
+    <SearchItem className="SearchComponent">
         <SearchInput>
             <input type='text' placeholder="원하는 컴포넌트를 검색해주세요."></input>
         </SearchInput>
@@ -93,7 +94,7 @@ const ListContainer = ()=>{
     </SearchKeyword>
     </SearchItem>
 
-            <ListComponent>
+            <div className="ListComponent">
             {
                 list.contents.map((record:any) =>{ 
                     //record
@@ -104,7 +105,7 @@ const ListContainer = ()=>{
                         )
                     })
             }            
-            </ListComponent>
+            </div>
         </div>)
     }else{
         return (<div></div>)

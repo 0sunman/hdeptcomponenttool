@@ -60,7 +60,7 @@ const MainPage = () => {
     const {mutate:isLoginConfirm} = useMutation(({userid,token}:any)=>graphqlFetcher(IS_LOGIN,{
         userid, token
     }),{onSuccess:({isLogin})=>{
-        const {userid, isLogin:isLoggedIn} = isLogin;
+        const {isLogin:isLoggedIn} = isLogin;
         setIsLogin(isLoggedIn);
         if(!isLoggedIn){
             window.localStorage.removeItem("userid");
