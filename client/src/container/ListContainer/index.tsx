@@ -85,6 +85,7 @@ const ListContainer = ()=>{
     <SearchItem className="SearchComponent">
         <SearchInput>
             <input type='text' placeholder="원하는 컴포넌트를 검색해주세요."></input>
+            <span className="search material-symbols-outlined icon">search</span>
         </SearchInput>
     <SearchKeyword>
         <span>#COS</span>

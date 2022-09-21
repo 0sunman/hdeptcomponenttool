@@ -182,3 +182,5 @@ html, body{height:100vh}
 	.SearchComponent{margin-bottom:0px;}
 	.ListComponent li{width:100%;}		
 }
+.search{ position: relative; left: -35px; background: transparent; border: 0; color:#45675b}
+.search:hover{color:#85675b; cursor: pointer;}
