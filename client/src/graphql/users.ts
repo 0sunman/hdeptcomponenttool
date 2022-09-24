@@ -42,7 +42,8 @@ export const IS_LOGIN = gql`
     mutation Mutation($userid: String!, $token: String!) {
         isLogin(userid: $userid, token: $token) {
             userid,
-            isLogin
+            isLogin,
+            role
         }
     }
 `

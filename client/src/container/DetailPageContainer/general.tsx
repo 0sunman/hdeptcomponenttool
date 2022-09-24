@@ -16,10 +16,10 @@ const RenderControllPane = ()=>{
 
 }
 
-const GeneralContainer = forwardRef<HTMLIFrameElement,{selector:string, path:string}>((props,ref)=>{/* 일반 */
+const GeneralContainer = forwardRef<HTMLIFrameElement,{selector:string, path:string, displaynone:boolean, componentid?:string}>((props,ref)=>{/* 일반 */
     const controlPaneRef = useRef<HTMLDivElement>(null);
     const [iframeDOM,setIframeDOM]:any[] = useRecoilState<any[]>(IFrameDOMSelector);
-    const {selector, path} = props;
+    const {selector, path, displaynone} = props;
     const [isPreviewDOMLoaded, setIsPreviewDOMLoaded] = useRecoilState<boolean>(isPreviewDOMLoadedSelector);
     const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
     
@@ -298,8 +298,7 @@ type StyleMap = {
             setAlertText("DOM을 읽어서 쉽게 만드는 중입니다.")
             if(isPreviewDOMLoaded){
                 const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
-                iframeDocument.querySelector(selector)!.innerHTML = codeData;
-        
+                iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
                 const testreturn = [...iframeDocument.querySelectorAll(".content-section *[data-target-control]")].map(element=>{  // 1. data-target-control을 찾음 
                     try{
                         const targetControl = element.dataset.targetControl;
@@ -403,11 +402,21 @@ type StyleMap = {
             }))
         }
 
+    const ChangeAttributeIframeDom = (e,key) =>{
 
+        setIframeDOM(iframeDOM.map((ele)=>{                                        
+            if(ele.key === key){  
+                const obj = {...ele, value:""}      
+                obj["value"] = e.target.value;
+                return obj;
+            }
+            return ele;
+        }))
+    }
     return (
         <div>
             <ImageUploaderPopup/>
-            <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup}>
+            <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup} displaynone={displaynone}>
                 <div className="general" ref={controlPaneRef}>
                     {
                         iframeDOM && iframeDOM.map((data:any)=>{
@@ -419,6 +428,7 @@ type StyleMap = {
                                         {createTitle(name)}
                                         <span className="content-title">링크 주소</span>
                                         <textarea  className='input' type='text' defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
+                                            ChangeAttributeIframeDom(e,key);
                                             element.href = e.target.value;
                                         }}></textarea>
                                     </div>
@@ -432,6 +442,7 @@ type StyleMap = {
                                         <textarea type='text' defaultValue={element.innerText} className="control-input"
                                         
                                         onKeyUp={(e)=>{
+                                            ChangeAttributeIframeDom(e,key);
                                             element.innerText = e.target.value;
                                             
                                             e.currentTarget.style.height = "12px";

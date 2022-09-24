@@ -27,7 +27,7 @@ const VerticalList = styled.div`
     & button{width:60px;}
 `
 
-const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice,controlHeight}:{children:ReactNode, copyClipboard:any,openImageUploaderPopup:any,switchDevice:any,controlHeight:any}) =>{
+const ControlPane = ({children,createDocument, copyClipboard,openImageUploaderPopup,switchDevice,controlHeight,displaynone}:{children:ReactNode,createDocument:any, copyClipboard:any,openImageUploaderPopup:any,switchDevice:any,controlHeight:any,displaynone?:boolean}) =>{
     const controlPaneSize = useRecoilValue(controlPaneSizeSelector);
     const location = useLocation();
     const [device_list, view_list] = [useRef<HTMLDivElement>(null),useRef<HTMLDivElement>(null)];
@@ -41,41 +41,53 @@ const ControlPane = ({children,copyClipboard,openImageUploaderPopup,switchDevice
         }
     }
     const initHeight = currentType !== "dev" ? "85px" : "135px";
-    return ( 
-        <div id="html_controller" style={{height:`calc(${controlPaneSize}% + ${initHeight})`}}>
-            <div className='controlpane'>
-                <ControlList>
-                    <ControlButton onClick={copyClipboard}>
-                        <span className="material-symbols-outlined icon">content_paste</span>
-                        <span className="text">코드 복사</span>
-                    </ControlButton>
-                    <ControlButton onClick={openImageUploaderPopup}>
-                        <span className="material-symbols-outlined icon">image</span>
-                        <span className="text">이미지</span>
-                    </ControlButton>
-                    
-                    {currentType !== "dev" ? (
-                    <ControlButton onClick={() => goTo("gen")}>
-                        <span className="material-symbols-outlined icon">edit</span>
-                        <span className="text">개발 모드</span>
-                    </ControlButton>
+    if(displaynone){ 
+        return (<div className="controller">
+            {children}
+        </div> )    
 
-                    ):(
-                    <ControlButton onClick={() => goTo("dev")}>
-                        <span className="material-symbols-outlined icon">face</span>
-                        <span className="text">일반 모드</span>
-                    </ControlButton>
-                    )}
-                    
+    }else{
+        return ( 
+            <div id="html_controller" style={{height:`calc(${controlPaneSize}% + ${initHeight})`}}>
+                <div className='controlpane'>
+                    <ControlList>
+                        <ControlButton onClick={createDocument}>
+                        <span className="material-symbols-outlined">description</span>
+                            <span className="text">문서 만들기</span>
+                        </ControlButton>
+                        <ControlButton onClick={copyClipboard}>
+                            <span className="material-symbols-outlined icon">content_paste</span>
+                            <span className="text">코드 복사</span>
+                        </ControlButton>
+                        <ControlButton onClick={openImageUploaderPopup}>
+                            <span className="material-symbols-outlined icon">image</span>
+                            <span className="text">이미지</span>
+                        </ControlButton>
+                        
+                        {currentType !== "dev" ? (
+                        <ControlButton onClick={() => goTo("gen")}>
+                            <span className="material-symbols-outlined icon">edit</span>
+                            <span className="text">개발 모드</span>
+                        </ControlButton>
+    
+                        ):(
+                        <ControlButton onClick={() => goTo("dev")}>
+                            <span className="material-symbols-outlined icon">face</span>
+                            <span className="text">일반 모드</span>
+                        </ControlButton>
+                        )}
+                        
+    
+                    </ControlList>
+    
+                </div>      
+                <div className="controller">
+                    {children}
+                </div>      
+            </div>
+        )
+    }
 
-                </ControlList>
-
-            </div>      
-            <div className="controller">
-                {children}
-            </div>      
-        </div>
-    )
 
 
 

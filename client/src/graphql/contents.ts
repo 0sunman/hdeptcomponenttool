@@ -1,8 +1,38 @@
 import {gql} from "graphql-tag";
 export const GET_CONTENT = gql`
     query GET_CONTENT($id:String!){
-
         content(id:$id){
+            id,
+            title,
+            content,
+            path,
+            selector,
+            data,
+            imgUrl
+        }
+
+    }
+`
+
+export const GET_CONTENT_LIKE = gql`
+    query GET_CONTENT_LIKE($title:String!){
+        contentslike(id:$title){
+            id,
+            title,
+            content,
+            path,
+            selector,
+            data,
+            imgUrl
+        }
+
+    }
+`
+
+
+export const GET_CONTENT_PATH = gql`
+    query GET_CONTENT_PATH($path:String!){
+        contentspath(path:$path){
             id,
             title,
             content,
@@ -54,13 +84,13 @@ export const ADD_CONTENTS = gql`
 export const MODIFY_CONTENT = gql`
     mutation Mutation($id: String!, $content: String, $path: String, $selector: String, $title: String, $imgUrl:String) {
         modifyContent(id: $id, content: $content, path: $path, selector: $selector, title: $title, imgUrl:$imgUrl) {
-        id
-        path
-        selector
-        title
-        content
-        data
-        imgUrl
+            id
+            path
+            selector
+            title
+            content
+            data
+            imgUrl
         }
   }
 `

@@ -8,9 +8,10 @@ import Alert from "../components/Popup/alert";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
 import { ADD_USER, IS_LOGIN, LOGIN_USER, LOGOUT_USER } from "../graphql/users";
 import { graphqlFetcher } from "../lib/queryClient";
-import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector } from "../recoils/pages";
+import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState } from "../recoils/pages";
 import arrToObj from "../util/arrToObj";
 import ListContainer from "../container/ListContainer";
+import { ADD_DOCUMENT } from "../graphql/documents";
 
 
 
@@ -22,8 +23,12 @@ const MainPage = () => {
     const [isLogin,setIsLogin] = useRecoilState(UserLoginState);
     const [isLoginPopup,setIsLoginPopup] = useRecoilState(UserLoginPopupState);
 
+    const [id,  setIdState] = useRecoilState<string>(IdSelector);
+    const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
+    const [selector, setSelector] = useRecoilState<string>(selectorSelector);
+    const [path,setPath] = useRecoilState<string>(pathSelector);
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
-
+    const [currentTarget, setCurrentTarget] = useRecoilState(currentTargetState)
     const navigate = useNavigate();
 
     const {mutate:login} = useMutation(({userid,password}:any)=>graphqlFetcher(LOGIN_USER,{
@@ -40,6 +45,45 @@ const MainPage = () => {
         console.error(err);
         setAlertText("로그인 실패 ㅠㅠ<br> 아이디 패스워드를 확인해주세요.");
     }}) 
+
+
+    const {mutate:addDocument} = useMutation(({title,author,path,selector,content,imgUrl}:any)=>graphqlFetcher(ADD_DOCUMENT,{title,author,path,selector,content,imgUrl}),{
+        onSuccess:({addDocument})=>{
+            const [{
+                id, imgUrl, selector, 
+                title, content, author, path
+            }] = addDocument;
+            // setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
+            // navigate("/document/dev/");
+            setIdState(id);
+            setPath(path);
+            setCodeData(content);
+            setSelector(selector);
+            setCurrentTarget("document");
+            navigate(`/document/dev/${id}`)
+        },
+        onError:(e)=>{
+            alert("시부레 에러남");
+        }
+    });
+
+
+
+    const createDocument = () => {
+        // 필요한 거
+        // 현재 문서 id => 필요없음.
+        // 만들어질 문서 id = > 필요없음.
+        const {title,author,path,selector,content,imgUrl} = {
+            title:"",
+            author:window.localStorage.userid,
+            path:"",
+            selector:"",
+            content:"",
+            imgUrl:""
+        }
+        addDocument({title,author,path,selector,content,imgUrl});
+    }
+
 
     const {mutate:join} = useMutation(({userid,password}:any)=>graphqlFetcher(ADD_USER,{
         userid, password
@@ -139,6 +183,10 @@ const MainPage = () => {
 */
         return ( 
             <>
+            <div>
+                <button onClick={() => {
+                    createDocument()}}>새 문서 만들기</button>
+            </div>
                 <ListContainer></ListContainer>    
                 
             {!isLogin && (<LoginWrapper className="popup-bg">

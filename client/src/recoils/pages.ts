@@ -1,7 +1,9 @@
 import {atom, selector} from "recoil";
 type SiteInfo = {
+    "currentTarget":"component"|"document",
     "isLoginPopup":boolean,
     "userid":string,
+    "rule":string,
     "isLogin":boolean,
     "id":string,
     "alert":{visible:boolean,text:string},
@@ -31,11 +33,14 @@ type ImageUploader = {
     hyundai:string,
     general:string
 }
+
 export const SiteInfo = atom<SiteInfo>({
     key:"SiteInfo",
     default:{
+        "currentTarget":"component",
         "isLoginPopup":true,
         "userid":"",
+        "rule":"person",
         "isLogin":true,
         "id":"",
         "alert":{visible:true,text:""},
@@ -200,4 +205,25 @@ export const UserLoginState = selector({
             set(SiteInfo,{...get(SiteInfo), "isLogin":newValue})
         }
     }
+})
+
+export const UserRuleState = selector({
+    key:"UserRuleState",
+    get:({get})=>get(SiteInfo).rule,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "string"){
+            set(SiteInfo,{...get(SiteInfo), "rule":newValue})
+        }
+    }
+})
+
+export const currentTargetState = selector({
+    key:"currentTargetState",
+    get:({get})=>get(SiteInfo).currentTarget,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "string"){
+            set(SiteInfo,{...get(SiteInfo), "currentTarget":newValue})
+        }
+    }
+
 })

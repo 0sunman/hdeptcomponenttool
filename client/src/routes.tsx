@@ -12,6 +12,8 @@ export const routes = [
             {path :"/", element:<MainPage/>,index:true},
             {path :"/detail/:id", element:<DetailPage/>,index:false},
             {path :"/detail/dev/:id", element:<DetailPage/>,index:false},
+            {path :"/document/:id", element:<DetailPage/>,index:false},
+            {path :"/document/dev/:id", element:<DetailPage/>,index:false},
             {path :"/write", element:<WritePage/>,index:false}
         ]
     }

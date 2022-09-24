@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GET_CONTENT } from "../../graphql/contents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
-import { alertSelector, alertTextSelector, codeSelector, IdSelector, pathSelector, selectorSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, codeSelector, currentTargetState, IdSelector, pathSelector, selectorSelector } from "../../recoils/pages";
 import PreviewContainer from "../Preview";
 import GeneralContainer from "./general";
 import DevContainer from "./dev";
 import styled from "styled-components";
+import { ADD_DOCUMENT, GET_DOCUMENT } from "../../graphql/documents";
 
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const param = useParams<string>();
@@ -18,11 +19,16 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const [selector, setSelector] = useRecoilState<string>(selectorSelector);
     const [path,setPath] = useRecoilState<string>(pathSelector);
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
+    const [currentTarget, setDataTarget] = useRecoilState(currentTargetState)
+
     const {id}=param;
     useEffect(()=>{
         setIdState(id as string);
     },[id]);
-    const {isSuccess,data} = useQuery([QueryKeys.CONTENT,"view",id], ()=>graphqlFetcher(GET_CONTENT,{id}),{
+
+
+
+    const {isSuccess,data,refetch} = useQuery([QueryKeys.CONTENT,"view",currentTarget,id], ()=>graphqlFetcher(GET_CONTENT,{id}),{
         onSuccess:({content})=>{
             const [{content:code,selector,path}] = content;
             if(content.length > 0){
@@ -35,11 +41,15 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                 setAlertText("오잉 데이터가 도착했는데 아무것도 없네요?");
                 throw Error("저런 에러가 났어요..");
             }
+
     },onError:(e)=>{
         setAlertText("저런 에러가 났어요");    
         console.error(e);
         throw Error("저런 에러가 났어요");
     },retry:1})
+
+
+
 
     useEffect(()=>{
         setAlertFlag(true);
@@ -109,6 +119,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
         setShow(true)
     }
     if(isSuccess){
+
         const {content:[{selector,path}]}= data;
         return (
             <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={TouchMoveEvent}  onMouseUp={MouseUpEvent}>
@@ -130,7 +141,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                 }}></div>
                 <div className="frame" style={{width:`${100-positionX}%`}} >
                     {pageType=== "general" ? (
-                        <GeneralContainer ref={iframe} selector={selector} path={path}></GeneralContainer>
+                        <GeneralContainer ref={iframe} selector={selector} path={path} displaynone={false}></GeneralContainer>
                     ): pageType ==="dev" ? (
                         <DevContainer ref={iframe} data={data}></DevContainer>
                     ):(<div>Type ERROR</div>)}

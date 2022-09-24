@@ -11,7 +11,7 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
 
     const [isLoginState] = useLogin();
     const [isLogin, setIsLogin] = useRecoilState(UserLoginState);
-    const {title,content,path,selector,imgUrl} = props.data.content[0]; 
+    const {title,content,path,selector,imgUrl} = props.data.document[0]; 
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
     const [iframeDOM,setIframeDOM]:any[] = useRecoilState<any[]>(IFrameDOMSelector);
@@ -25,13 +25,6 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
     const openImageUploaderPopup = () =>{
         setVisibleImageUploaderPopup({main:"flex"});
     }
-    useEffect(()=>{
-        try{
-            ((ref.current) as HTMLIFrameElement).contentDocument!.querySelector(".content-section")!.innerHTML = codeData
-        }catch(e){
-
-        }
-    },[codeData])
 
     
     useEffect(()=>{

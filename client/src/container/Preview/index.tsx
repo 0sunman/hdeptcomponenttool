@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { ForwardedRef, forwardRef, RefObject, useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { alertSelector, alertTextSelector, codeSelector, isPreviewDOMLoadedSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, codeSelector, isPreviewDOMLoadedSelector,pathSelector } from "../../recoils/pages";
 
 /*
     PreviewContainer
@@ -9,7 +9,8 @@ import { alertSelector, alertTextSelector, codeSelector, isPreviewDOMLoadedSelec
     - iframe에서 페이지 로드를 받으면 runDOMController을 통해 컨트롤을 만듭니다.
 */
 const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, selector:string, path:string, show:boolean}>((props,ref)=>{
-    const {isSuccess, selector, path} = props;
+    const {isSuccess, selector} = props;
+    const [path,setPath] = useRecoilState(pathSelector);
     if(selector === undefined || path === undefined){ // 케이스 1 : 아무것도 없을 경우, 로드가 안된걸로 처리. (iframe의 src와 selector를 둘 다 받아야함!)
         return <div>Loading...</div>
     }
@@ -36,6 +37,13 @@ const PreviewContainer = forwardRef<HTMLIFrameElement,{isSuccess:boolean, select
         }
        // applyCodeOnIframe({isDOMController:true});    
     },[])
+    useEffect(()=>{
+        try{
+            ((ref.current) as HTMLIFrameElement).contentDocument!.querySelector(".content-section")!.innerHTML = codeData
+        }catch(e){
+
+        }
+    },[codeData])
 
     useEffect(()=>{
         setAlertFlag(true);

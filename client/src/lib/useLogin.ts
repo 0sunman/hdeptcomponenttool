@@ -4,22 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { IS_LOGIN } from "../graphql/users";
 import { graphqlFetcher } from "../lib/queryClient";
-import { UserLoginState } from "../recoils/pages";
+import { selectorSelector, UserLoginState } from "../recoils/pages";
 
 const useLogin = () =>{
-    
+    const userid = window.localStorage.getItem("userid")
     const [isLogin,setIsLogin] = useState<Boolean>(false);
+    const [role,setRole] = useState<String>("");
     const navigate = useNavigate();
     const {mutate:isLoginConfirm} = useMutation(({userid,token}:any)=>graphqlFetcher(IS_LOGIN,{
         userid, token
     }),{onSuccess:({isLogin})=>{
-        const {isLogin:isLoggedIn} = isLogin;
+        const {isLogin:isLoggedIn, role} = isLogin;
         setIsLogin(isLoggedIn);
+        setRole(role);
         if(!isLoggedIn){
             window.localStorage.removeItem("userid");
             window.localStorage.removeItem("token");
         }
     },onError:(err)=>{
+        setIsLogin(false);
+        window.localStorage.removeItem("userid");
+        window.localStorage.removeItem("token");
         console.error(err);
     }}) 
 
@@ -34,6 +39,6 @@ const useLogin = () =>{
         }
     },[])
 
-    return [isLogin];
+    return [isLogin, role];
 }
 export default useLogin;
