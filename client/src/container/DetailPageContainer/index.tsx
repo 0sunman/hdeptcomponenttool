@@ -58,7 +58,6 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     },[])
 
     useEffect(()=>{
-        console.log(data)
     },[data])
 //     <DetailPageComponent>
 //     <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={path}/>

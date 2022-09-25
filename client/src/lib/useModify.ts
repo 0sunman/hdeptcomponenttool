@@ -63,7 +63,6 @@ const useModify = ({type, param}:ModifyFrame)=>{
         onError:(e)=>{
             setAlertText("이런.. 수정하다가 에러가 나버렸습니다.")
             throw new Error("이런 수정하다가 에러가 나버렸습니다.")
-            console.log(e);
         }
     });
     const {mutate:removeItem} = useMutation((cid:string)=>graphqlFetcher(removeCMD,{id:cid}),{

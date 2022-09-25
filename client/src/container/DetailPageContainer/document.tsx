@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { ADD_DOCUMENT, GET_DOCUMENT } from "../../graphql/documents";
 import useResizeHooks from "../../lib/useResize";
 import { ReactSortable } from "react-sortablejs";
-
+import {v4} from 'uuid';
 const ResizeLayout = styled.div`
         
 `
@@ -49,7 +49,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const [currentTarget, setDataTarget] = useRecoilState(currentTargetState)
     const [handle,positionX,setPositionX,flag,setFlag,show,setShow,MouseMoveEvent,TouchMoveEvent,MouseDownEvent,TouchStartEvent,MouseUpEvent] = useResizeHooks();
     const [isPreviewDOMLoaded, setIsPreviewDOMLoaded] = useRecoilState<boolean>(isPreviewDOMLoadedSelector);
-
+    const [step, setStep] = useState<Number>(0);
     const {id}=param;
     useEffect(()=>{
         setIdState(id);
@@ -88,7 +88,6 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
 
 
     useEffect(()=>{
-        console.log(data)
     },[data])
 
     const [loadedComponentList, setLoadedComponentList] = useState([]);
@@ -98,17 +97,17 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
         setLoadedComponentList(loadedComponentlist);
     },[loadedComponentlist])
     useEffect(()=>{
-        let newArray = []
-        if(componentList.length > 0){
-            iframe.current?.contentDocument?.querySelectorAll(".content-section > div").forEach((section,idx)=>{
-                if(section.outerHTML.indexOf("testos") > -1){
-                    debugger
-                }
-                newArray = [...newArray,{...componentList[idx], content:section.outerHTML}]
-            })
-        //    setComponentList(newArray);    
-        }
-        setComponentList(newArray);
+        // let newArray = []
+        // if(componentList.length > 0){
+        //     iframe.current?.contentDocument?.querySelectorAll(".content-section > div").forEach((section,idx)=>{
+        //         if(section.outerHTML.indexOf("testos") > -1){
+        //             debugger
+        //         }
+        //         newArray = [...newArray,{...componentList[idx], content:section.outerHTML}]
+        //     })
+        // //    setComponentList(newArray);    
+        // }
+        // setComponentList(newArray);
 
     },[codeData])
     useEffect(()=>{
@@ -122,6 +121,33 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     
         }
     },[componentList])
+    const [step1,step2,step3,step4] = [useRef(null),useRef(null),useRef(null),useRef(null)]
+    useEffect(()=>{
+        if(step1.current !== null|| step2.current !== null|| 
+            step3.current !== null|| step4.current !== null){
+            step1.current.style.display = "none"
+            step2.current.style.display = "none"
+            step3.current.style.display = "none"
+            step4.current.style.display = "none"
+
+
+            if(step === 1){
+                step1.current.style.display = "block"
+            }else if(step ===2 || step ===3){
+                step2.current.style.display = "block"
+                step3.current.style.display = "block"
+            }else if(step === 4){
+                step4.current.style.display = "block"
+
+            }else{
+                step1.current.style.display = "block"
+
+            }
+                        
+        }
+
+    })
+
     if(isSuccess){
 
         const {document:[{selector,path}]}= data;
@@ -147,7 +173,8 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                     <div className="document-editor" style={{paddingLeft:'20px'}}>
                         <ul>
                             <li>
-                                <h2>1. 사용할 기본 템플릿을 선택해주세요.</h2>
+                                <h2 onClick={()=>setStep(1)}>1. 사용할 기본 템플릿을 선택해주세요.</h2>
+                                <div ref={step1} className="content" style={{"display":"block"}}>
                                 <select onChange={(e)=>{
                                     switch(e.target.value){
                                         case "cos":
@@ -166,6 +193,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                             alert("추후 개발 예정");
                                         break;
                                     }
+                                    setStep(2)
                                 }}>
                                     <option value="">없음</option>
                                     <option value="cos">COS</option>
@@ -173,27 +201,52 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                     <option value="thehyundai">THEHYUNDAI</option>
                                     <option value="nanushka">Nanushka</option>
                                 </select>
-                            </li>
-                            <li className="accodian">
-                                <h2>2. 사용할 컴포넌트를 추가해주세요</h2>
-                                <div className="content">
-                                    
-                                    <ul>
-                                        {isSuccessComponent && loadedComponentList && loadedComponentlist.contentspath.map(({id:componentId,title,content})=>(
-                                            <li>{title} <button onClick={e=>{
-                                                setComponentList([...componentList, {id:componentList.length,componentId,title,content}])
-                                            }}>추가</button></li>
-                                            ))}
-                                    </ul>
-                                    <input onChange={(e)=>{
-                                        setSelector(e.target.value)
-                                    }}></input>
                                 </div>
                             </li>
                             <li className="accodian">
-                                <h2>3. 컴포넌트의 순서를 결정해주세요.</h2>
-                                <div className="content">
-                                    <ReactSortable list={componentList} setList={setComponentList}>
+                                <h2 onClick={()=>{ setStep(2)}}>2. 사용할 컴포넌트를 추가해주세요</h2>
+                                <div ref={step2} className="content">
+                                    
+                                    <ul className="add-list">
+                                        {isSuccessComponent && loadedComponentList && loadedComponentlist.contentspath.map(({id:componentId,title,content})=>(
+                                            <li>{title} <button onClick={e=>{
+                                                const uniqueid = v4();
+                                                setComponentList([...componentList, {
+                                                    id:componentList.length,
+                                                    componentId,
+                                                    uniqueid,
+                                                    title,
+                                                    content:`<div data-0sid='${uniqueid}'>${content}</div>`}])
+                                            }}>추가</button></li>
+                                            ))}
+                                    </ul>
+                                </div>
+                            </li>
+                            <li className="accodian">
+                                <h2 onClick={()=>setStep(3)}>3. 컴포넌트의 순서를 결정해주세요.</h2>
+                                <div ref={step3} className="content">
+                                    <ReactSortable className="order-list" list={componentList} setList={(...arg) =>{
+                                         let newArray = []
+                                        if(arg[0].length > 0){
+                                            iframe.current?.contentDocument?.querySelectorAll(".content-section > div").forEach((section,idx)=>{
+                                                newArray.push({
+                                                    id:section.dataset["0sid"],
+                                                    content:String(section.outerHTML)
+                                                })
+                                            })
+                                            newArray.forEach(ele =>{
+                                                arg[0] = arg[0].map(data => {
+                                                    if(ele.id === data.uniqueid){
+                                                        data.content = ele.content
+                                                    }
+                                                    return data;
+                                                })
+                                            })
+                                        //    setComponentList(newArray);    
+                                        }
+                                        setComponentList(arg[0]);
+                                        
+                                        }}>
                                         {componentList.map(({id, title}:any)=><div>
                                             {id}{' '}{title} 
                                         </div>)}
@@ -203,8 +256,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                 
                             </li>
                             <li>
-                                <h2>4. 문서 수정하기</h2>
-                                <GeneralContainer ref={iframe} selector={selector} path={path} displaynone={true}></GeneralContainer>
+                                <h2 onClick={()=>setStep(4)}>4. 문서 수정하기</h2>
+                                <div ref={step4} className="content">
+                                    <GeneralContainer ref={iframe} selector={selector} path={path} displaynone={true}></GeneralContainer>
+                                </div>
+                            </li>
+                            <li>
+                                <button>문서 저장하기</button>
                             </li>
                         </ul>
                     </div>

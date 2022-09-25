@@ -5,7 +5,6 @@ export enum DBField{
     CONTENTS="contents",
 }
 const BASEPATH = resolve();
-console.log(BASEPATH)
 const filenames = {
     [DBField.CONTENTS]:resolve(BASEPATH, "src/jsondb/datas/contents.json"),
 }

@@ -2,6 +2,7 @@ import {atom, selector} from "recoil";
 type SiteInfo = {
     "currentTarget":"component"|"document",
     "isLoginPopup":boolean,
+    "isNewDocument":boolean,
     "userid":string,
     "rule":string,
     "isLogin":boolean,
@@ -18,7 +19,8 @@ type SiteInfo = {
     "popup":{
         imgUpload:ImageUploader
     }
-    "IFrameDOM":[]
+    "IFrameDOM":[],
+    "IFrameDOMValue":[]
 
 }
 type Page = {
@@ -39,6 +41,7 @@ export const SiteInfo = atom<SiteInfo>({
     default:{
         "currentTarget":"component",
         "isLoginPopup":true,
+        "isNewDocument":false,
         "userid":"",
         "rule":"person",
         "isLogin":true,
@@ -65,7 +68,8 @@ export const SiteInfo = atom<SiteInfo>({
             }
         },
         "isPreviewDOMLoaded": false,
-        "IFrameDOM":[]
+        "IFrameDOM":[],
+        "IFrameDOMValue":[]
     }    
 })
 
@@ -171,9 +175,16 @@ export const isPreviewDOMLoadedSelector = selector<boolean>({
 })
 export const IFrameDOMSelector = selector({
     key:"IFrameDOMSelector",
-    get:({get})=>(get(SiteInfo).IFrameDOMSelector),
+    get:({get})=>(get(SiteInfo).IFrameDOM),
     set:({set,get,reset},newValue)=>{
-        set(SiteInfo, (prev):SiteInfo =>({...prev,"IFrameDOMSelector":newValue}))
+        set(SiteInfo, (prev):SiteInfo =>({...prev,"IFrameDOM":newValue}))
+    }
+})
+export const IFrameDOMValueSelector = selector({
+    key:"IFrameDOMSelector",
+    get:({get})=>(get(SiteInfo).IFrameDOMValue),
+    set:({set,get,reset},newValue)=>{
+        set(SiteInfo, (prev):SiteInfo =>({...prev,"IFrameDOMValue":newValue}))
     }
 })
 
@@ -223,6 +234,18 @@ export const currentTargetState = selector({
     set:({get,set},newValue)=>{
         if(typeof newValue === "string"){
             set(SiteInfo,{...get(SiteInfo), "currentTarget":newValue})
+        }
+    }
+
+})
+
+
+export const isNewDocumentState = selector({
+    key:"isNewDocumentState",
+    get:({get})=>get(SiteInfo).isNewDocument,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "boolean"){
+            set(SiteInfo,{...get(SiteInfo), "isNewDocument":newValue})
         }
     }
 

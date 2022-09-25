@@ -17,7 +17,6 @@ const ImageUploader = ({onImageChange}:{onImageChange:any}) =>{
             const {
                 data : {uploadURL}
             } = await axios.get("https://zerosunshop.herokuapp.com/api/uploadImage")
-            console.log(uploadURL);
             const formData = new FormData();
             formData.append("file", image[0], "test");
 

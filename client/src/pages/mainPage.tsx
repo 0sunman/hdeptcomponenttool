@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Suspense, SyntheticEvent, useEffect } from "react";
 import { useMutation } from "react-query";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import Alert from "../components/Popup/alert";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
 import { ADD_USER, IS_LOGIN, LOGIN_USER, LOGOUT_USER } from "../graphql/users";
 import { graphqlFetcher } from "../lib/queryClient";
-import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState } from "../recoils/pages";
+import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState, isNewDocumentState } from "../recoils/pages";
 import arrToObj from "../util/arrToObj";
 import ListContainer from "../container/ListContainer";
 import { ADD_DOCUMENT } from "../graphql/documents";
@@ -20,12 +20,14 @@ const LoginForm = styled.form``;
 
 
 const MainPage = () => {
+    const [newDocTitle, setNewDocTitle] = useState("");
+    const [newDocType, setNewDocType] = useState("");
     const [isLogin,setIsLogin] = useRecoilState(UserLoginState);
     const [isLoginPopup,setIsLoginPopup] = useRecoilState(UserLoginPopupState);
-
     const [id,  setIdState] = useRecoilState<string>(IdSelector);
     const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
     const [selector, setSelector] = useRecoilState<string>(selectorSelector);
+    const [isNewDocument, setIsNewDocument] = useRecoilState<boolean>(isNewDocumentState);
     const [path,setPath] = useRecoilState<string>(pathSelector);
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
     const [currentTarget, setCurrentTarget] = useRecoilState(currentTargetState)
@@ -48,41 +50,28 @@ const MainPage = () => {
 
 
     const {mutate:addDocument} = useMutation(({title,author,path,selector,content,imgUrl}:any)=>graphqlFetcher(ADD_DOCUMENT,{title,author,path,selector,content,imgUrl}),{
-        onSuccess:({addDocument})=>{
-            const [{
-                id, imgUrl, selector, 
-                title, content, author, path
-            }] = addDocument;
+        onSuccess:({addDocument:docs})=>{
+            const {
+                id:docId, title,selector, 
+                content, path,imgUrl,
+                author
+            } = docs[0]
+            
             // setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
-            // navigate("/document/dev/");
-            setIdState(id);
+            setIdState(docId);
             setPath(path);
             setCodeData(content);
             setSelector(selector);
             setCurrentTarget("document");
-            navigate(`/document/dev/${id}`)
+            navigate(`/document/${docId}`)
         },
         onError:(e)=>{
-            alert("시부레 에러남");
+            console.error(e);
+            setAlertFlag(true);
+            setAlertText("에러가 발생했습니다! ㅠㅠ")
         }
     });
 
-
-
-    const createDocument = () => {
-        // 필요한 거
-        // 현재 문서 id => 필요없음.
-        // 만들어질 문서 id = > 필요없음.
-        const {title,author,path,selector,content,imgUrl} = {
-            title:"",
-            author:window.localStorage.userid,
-            path:"",
-            selector:"",
-            content:"",
-            imgUrl:""
-        }
-        addDocument({title,author,path,selector,content,imgUrl});
-    }
 
 
     const {mutate:join} = useMutation(({userid,password}:any)=>graphqlFetcher(ADD_USER,{
@@ -183,9 +172,71 @@ const MainPage = () => {
 */
         return ( 
             <>
+            {isNewDocument && <div className="popup-bg">
+                <div className="popup new-doc">
+                    <div>
+                        <h2>새로운 웹 문서 만들기</h2>
+                        <input placeholder=" 제목을 입력해주세요." onChange={(e)=>{
+                            setNewDocTitle(e.target.value);
+                        }}></input>
+                        <select onChange={(e)=>{
+                            setNewDocType(e.target.value);
+                        }}>
+                            <option value="">문서 유형을 지정하세요.</option>
+                            <option value="cos">COS</option>
+                            <option value="aos">AOS</option>
+                            <option value="arket">ARKET</option>
+                            <option value="thd">THE HYUNDAI</option>
+                            <option value="doc">새로운 웹 문서</option>
+                        </select>
+                        <div className="button-area">
+                            <button onClick={()=>{
+                                const title = newDocTitle;
+                                const content = "";
+                                const selector = ".content-section";
+                                const imgUrl = "";
+                                const path = newDocType;
+                                const author = window.localStorage.getItem("userid");
+                                if(title === "" || path === ""){
+                                    setAlertFlag(true);
+                                    setAlertText("제목이랑 문서유형 써주세요 ㅠㅠ")
+                                    return;
+                                }
+                                let modifiedPath = ""
+                                switch(path){
+                                    case "cos":
+                                        modifiedPath = "/global/cos.html"
+                                    break;
+                                    case "aos":
+                                        modifiedPath = "/global/aos.html"
+                                    break;
+                                    case "arket":
+                                        modifiedPath = "/global/arket.html"
+                                    break;
+                                    case "thd":
+                                        modifiedPath = "/global/thehyundai.html"
+                                    break;
+                                    case "doc":
+                                        modifiedPath = "doc"
+                                    break;
+                                }
+                                addDocument({title, content, selector, imgUrl, path:modifiedPath, author})
+                            }}>웹문서 만들기</button>
+                            <button onClick={()=>{
+                                setIsNewDocument(false);
+                            }}>취소하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>}
             <div>
-                <button onClick={() => {
-                    createDocument()}}>새 문서 만들기</button>
+                <button className="writeButton" style={{position:"fixed",bottom:"10px",right:"10px", zIndex:"99"}} onClick={() => {
+                    setIsNewDocument(true)
+                }}>
+                    <span className="material-symbols-outlined">
+                edit
+                </span>
+                </button>
             </div>
                 <ListContainer></ListContainer>    
                 

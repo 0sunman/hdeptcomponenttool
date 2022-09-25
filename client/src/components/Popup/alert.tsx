@@ -11,7 +11,6 @@ const Alert = () => {
         setAlertFlag(false);
     }
     useEffect(()=>{
-        console.log(alertFlag, alertText)
     },[alertFlag])
     
     return (<Popup visible={alertFlag} onClose={onClose}>

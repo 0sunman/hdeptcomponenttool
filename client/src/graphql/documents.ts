@@ -68,7 +68,7 @@ export const ADD_DOCUMENT = gql`
 
 export const MODIFY_DOCUMENT = gql`
     mutation Mutation($id: Int!, $content: String, $selector: String, $title: String, $imgUrl:String, $path:String, $author:String) {
-        modifyDOCUMENT(id: $id, content: $content, selector: $selector, title: $title, imgUrl:$imgUrl, path:$path, author:$author) {
+        modifyDocument(id: $id, content: $content, selector: $selector, title: $title, imgUrl:$imgUrl, path:$path, author:$author) {
             id
             selector
             title

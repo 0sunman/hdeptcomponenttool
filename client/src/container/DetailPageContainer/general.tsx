@@ -9,6 +9,8 @@ import ImageUploaderPopup from "../Popup/ImageUploader";
 import runDOMController from "../../util/runDOMController";
 import ImageUploader from "../ImageUpload/ImageUploader";
 import { ChromePicker } from 'react-color';
+import { useLocation, useNavigate } from "react-router-dom";
+import { v4 } from "uuid";
 
 
 
@@ -17,6 +19,9 @@ const RenderControllPane = ()=>{
 }
 
 const GeneralContainer = forwardRef<HTMLIFrameElement,{selector:string, path:string, displaynone:boolean, componentid?:string}>((props,ref)=>{/* 일반 */
+    const location = useLocation();
+
+
     const controlPaneRef = useRef<HTMLDivElement>(null);
     const [iframeDOM,setIframeDOM]:any[] = useRecoilState<any[]>(IFrameDOMSelector);
     const {selector, path, displaynone} = props;
@@ -97,11 +102,9 @@ type StyleMap = {
             styleData = styleData + ";";
             styleData.split(";").forEach((v, idx)=>{
                 if(idx -1 === styleData.length) return;
-                console.log(styleData)
                 const [_name, _value]= v.split(":");
                 if(_name === undefined || _value === undefined) return;
                 const [name, value] = [_name.trim(), _value.trim()];
-                console.log(v)
                 
                 switch(name){
                     case "font-family":
@@ -298,13 +301,19 @@ type StyleMap = {
             setAlertText("DOM을 읽어서 쉽게 만드는 중입니다.")
             if(isPreviewDOMLoaded){
                 const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
-                iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
+                if(location.pathname.indexOf("/document") > -1){
+                    iframeDocument.querySelector(".content-section")!.innerHTML = codeData;
+                }else{
+                    iframeDocument.querySelector(".content-section")!.innerHTML = `<div>${codeData}</div>`;
+                }
                 const testreturn = [...iframeDocument.querySelectorAll(".content-section *[data-target-control]")].map(element=>{  // 1. data-target-control을 찾음 
                     try{
                         const targetControl = element.dataset.targetControl;
+                        const parentId = element.closest("div[data-0sid]")?.dataset["0sid"]
                         const [name,target] = targetControl.split("_");
                         const targets = target.split("-");
-                        return [element,targets,name]; // 1차 가공
+                        const controlRef = null;
+                        return [element,targets,name,parentId,controlRef]; // 1차 가공
     
                     }catch(error){
                         console.error(error);
@@ -315,7 +324,7 @@ type StyleMap = {
                 });
                 setAlertText("1차 가공 완료")
                 let cnt = 0;
-                const tempTotal: { key:number; element: any; target: any; name: any; style?: any;}[] = [];
+                const tempTotal: { key:number; element: any; target: any; name: any; style?: any; controlRef?:any}[] = [];
                 testreturn.forEach((element)=>{ // 2. 평탄화 작업 시작
                     try{
     
@@ -324,9 +333,9 @@ type StyleMap = {
                                 let styleObj={};
                                 if(ele === "style"){
                                     styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], style:styleObj})
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4], style:styleObj})
                                 }else{
-                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2]})
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4]})
                                 }
                                 cnt++;
                             })
@@ -335,9 +344,9 @@ type StyleMap = {
                             let styleObj={};
                             if(element[1][0] === "style"){
                                 styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], style:styleObj})
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4], style:styleObj})
                             }else{
-                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2]})
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4]})
                             }
         
                         }
@@ -371,7 +380,6 @@ type StyleMap = {
         }
     },[])
     useEffect(()=>{
-        console.log(iframeDOM)
     },[iframeDOM])
 
         let beforeTitle = "";
@@ -413,22 +421,45 @@ type StyleMap = {
             return ele;
         }))
     }
+    useEffect(()=>{
+        console.log("ha");
+    })
+    const testCheck = ()=>{
+        document.querySelectorAll("textarea").forEach(element=>{
+            element.click();
+        })
+        document.querySelectorAll("input[type='text']").forEach(element=>{
+            element.click();
+        })
+        document.querySelectorAll("input[type='range']").forEach(element=>{
+            element.click();
+        })
+    }
     return (
         <div>
             <ImageUploaderPopup/>
             <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup} displaynone={displaynone}>
-                <div className="general" ref={controlPaneRef}>
+                <div className="general" onChange={()=>{
+                    console.log("DIV Change");
+                }}>
                     {
                         iframeDOM && iframeDOM.map((data:any)=>{
-                            const {element,target,name,style,key} = data;
+                            const {element,target,name,style,key,parentId, controlRef} = data;
+                            testCheck(element);
                             switch(target){
-                                case "href":                 
-                                    return (
+                                case "href":
+                                return (
                                     <div>
                                         {createTitle(name)}
                                         <span className="content-title">링크 주소</span>
-                                        <textarea  className='input' type='text' defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
-                                            ChangeAttributeIframeDom(e,key);
+                                        <textarea  className='input' type='text' 
+                                          onClick={(e)=>{
+                                                if(element.href !== e.target.value){
+                                                    e.target.value = element.href
+                                                }
+                                            }}
+                                        
+                                        defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
                                             element.href = e.target.value;
                                         }}></textarea>
                                     </div>
@@ -439,10 +470,15 @@ type StyleMap = {
                                     <div>
                                         {createTitle(name)}
                                         <span className="control-title">텍스트</span>
-                                        <textarea type='text' defaultValue={element.innerText} className="control-input"
+                                        <textarea 
+                                        defaultValue={element.innerText} className="control-input" data-parentId={parentId}
                                         
-                                        onKeyUp={(e)=>{
-                                            ChangeAttributeIframeDom(e,key);
+                                        onClick={(e)=>{
+                                            if(element.innerText !== e.target.value){
+                                                e.target.value = element.innerText
+                                            }
+                                        }}
+                                         onChange={(e)=>{
                                             element.innerText = e.target.value;
                                             
                                             e.currentTarget.style.height = "12px";
@@ -477,14 +513,19 @@ type StyleMap = {
                                     <div>
                                         {createTitle(name)}
                                         <span className="control-title">리소스 위치</span>
-                                        <textarea type='text' defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
+                                        <textarea type='text' 
+                                        onClick={(e)=>{
+                                            if(element.src !== e.target.value){
+                                                e.target.value = element.src
+                                            }
+                                        }}
+                                        defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
                                             element.src = e.target.value;
                                         }}></textarea>
                                     </div>
                                     )                        
 
                                 case "style":
-                                    console.log(style);
                                     function isExistGroup(obj:any){
                                         for(let a in obj){
                                             if(obj[a] !== null){

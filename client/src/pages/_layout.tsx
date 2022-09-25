@@ -61,7 +61,6 @@ const GlobalLayout = ()=>{
         window.localStorage.removeItem("token");
         setIsLogin(false);
     },onError:(err)=>{
-        console.log(err);
     }}) 
     
     useEffect(()=>{
@@ -77,7 +76,11 @@ const GlobalLayout = ()=>{
                 
                 </Title>
                 {(currentPage !== "/") && <button onClick={() => navigate(-1)} className="back material-symbols-outlined">arrow_back_ios</button>}
-                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && <div className="sub"><button onClick={() => {navigate("/write")}}>글쓰기</button> <button onClick={()=>logout()}>로그아웃</button></div>}
+                    {(currentPage.indexOf("/write") === -1 && currentPage.indexOf("/detail") === -1) && 
+                        <div className="sub">
+                        <button onClick={() => {navigate("/write")}}>컴포넌트 생성</button> 
+                        <button onClick={()=>logout()}>로그아웃</button></div>
+                    }
                     {(currentPage.indexOf("/detail") > -1) && (
                         <div className="sub">
                             <Link to='/' style={{color:"white"}}>목록으로</Link>
