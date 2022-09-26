@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { RecoilBridge, useRecoilState } from "recoil";
 import styled from "styled-components";
 import { GET_CONTENTS } from "../../graphql/contents";
+import { GET_DOCUMENTS, GET_DOCUMENTS_AUTHOR } from "../../graphql/documents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
 import { alertSelector, alertTextSelector } from "../../recoils/pages";
 
@@ -63,22 +64,33 @@ const SearchKeyword = styled.div`
 `
 
 const ListContainer = ()=>{
-
+    const [cdTab, setCdTab] = useState("component");
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
     const {data:list, isSuccess} = useQuery([QueryKeys.CONTENT,"view","all"],()=>graphqlFetcher(GET_CONTENTS),{
-    onSuccess:({data})=>{    
-        setAlertText("환영합니다!<br><br>모바일 페이지로는 현재 개발이 안돼있어서... 깨져나올거에요!<br>추후에 개발 예정이며<br>태블릿이나 PC로 오세요!");
-    }, 
-    onError:(e)=>{
-        setAlertFlag(true)
-        setAlertText("데이터를 읽어오다가 사고가 났네요... 다시 시도해보시겠어요?");
-        console.error(e);
-        throw Error("에러발생!!!")
-    }});
+        onSuccess:({data})=>{    
+            setAlertText("환영합니다!<br><br>모바일 페이지로는 현재 개발이 안돼있어서... 깨져나올거에요!<br>추후에 개발 예정이며<br>태블릿이나 PC로 오세요!");
+        }, 
+        onError:(e)=>{
+            setAlertFlag(true)
+            setAlertText("데이터를 읽어오다가 사고가 났네요... 다시 시도해보시겠어요?");
+            console.error(e);
+            throw Error("에러발생!!!")
+        }});
+
+    const {data:list_doc, isSuccess:isDocSuccess} = useQuery(["document","all"],()=>graphqlFetcher(GET_DOCUMENTS_AUTHOR,{author:window.localStorage.userid}),{
+        onSuccess:({data})=>{    
+            setAlertText("환영합니다!<br><br>모바일 페이지로는 현재 개발이 안돼있어서... 깨져나올거에요!<br>추후에 개발 예정이며<br>태블릿이나 PC로 오세요!");
+        }, 
+        onError:(e)=>{
+            setAlertFlag(true)
+            setAlertText("데이터를 읽어오다가 사고가 났네요... 다시 시도해보시겠어요?");
+            console.error(e);
+            throw Error("에러발생!!!")
+        }});
     useEffect(()=>{
         setAlertText("컴포넌트들을 읽어오고 있습니다.");
     },[])
-    if(isSuccess){
+    if(isSuccess && isDocSuccess){
         const result = [...list.contents];
         return (<div>   
 
@@ -94,10 +106,19 @@ const ListContainer = ()=>{
         <span>#TOTEME</span>
     </SearchKeyword>
     </SearchItem>
-
-            <div className="ListComponent">
-            {
-                list.contents.map((record:any) =>{ 
+    <div className="CDTab">
+        <div className={cdTab==="component" ? "active" : ""} onClick={()=>{
+            setCdTab("component")
+        }}>컴포넌트</div>
+        <div className={cdTab==="document" ? "active" : ""} onClick={()=>{
+            setCdTab("document")
+        }}>문서</div>
+    </div>
+        <div>
+            {cdTab==="component" && <div className="ListComponent">
+            
+                { 
+                    list.contents.map((record:any)=>{ 
                     //record
                     return (
                         <ListItem imgUrl={record.imgUrl}>
@@ -105,9 +126,25 @@ const ListContainer = ()=>{
                         </ListItem>
                         )
                     })
-            }            
-            </div>
-        </div>)
+                }
+                </div>}
+            
+            {cdTab==="document" && (<div className="ListComponent">
+            
+                { 
+                    list_doc.documentsauthor.map((record:any) =>{ 
+                    //record
+                    return (
+                        <div className="DocumentElement">
+                            <Link to={`/document/${record.id}`}>{record.title}</Link>
+                        </div>
+                        )
+                    })
+                }
+            </div>)}
+    </div>
+
+            </div>)
     }else{
         return (<div></div>)
     }

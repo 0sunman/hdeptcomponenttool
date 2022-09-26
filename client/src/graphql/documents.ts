@@ -29,6 +29,19 @@ export const GET_DOCUMENT_LIKE = gql`
     }
 `
 
+export const GET_DOCUMENTS_AUTHOR = gql`
+    query GET_DOCUMENTS_AUTHOR($author:String!){
+        documentsauthor(author:$author){
+            id
+            selector
+            title
+            content
+            path
+            author
+            imgUrl
+        }
+    }
+`
 export const GET_DOCUMENTS = gql`
     query GET_DOCUMENTS{
         documents{
@@ -69,7 +82,6 @@ export const ADD_DOCUMENT = gql`
 export const MODIFY_DOCUMENT = gql`
     mutation Mutation($id: Int!, $content: String, $selector: String, $title: String, $imgUrl:String, $path:String, $author:String) {
         modifyDocument(id: $id, content: $content, selector: $selector, title: $title, imgUrl:$imgUrl, path:$path, author:$author) {
-            id
             selector
             title
             content

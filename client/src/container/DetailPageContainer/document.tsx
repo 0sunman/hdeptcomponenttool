@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { GET_CONTENT, GET_CONTENT_PATH } from "../../graphql/contents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
@@ -9,7 +9,7 @@ import PreviewContainer from "../Preview";
 import GeneralContainer from "./general";
 import DevContainer from "./devDocument";
 import styled from "styled-components";
-import { ADD_DOCUMENT, GET_DOCUMENT } from "../../graphql/documents";
+import { ADD_DOCUMENT, GET_DOCUMENT, MODIFY_DOCUMENT } from "../../graphql/documents";
 import useResizeHooks from "../../lib/useResize";
 import { ReactSortable } from "react-sortablejs";
 import {v4} from 'uuid';
@@ -39,8 +39,10 @@ const loadComponentList = (path:any)=>{
     return [isSuccessComponent, loadedComponentlist,loadedComponentRefetch];
 }
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
+    const location = useLocation();
     const param = useParams<string>();
     const iframe = useRef<HTMLIFrameElement>(null);
+    const navigate = useNavigate();
     const [idState,  setIdState] = useRecoilState<string>(IdSelector);
     const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
     const [selector, setSelector] = useRecoilState<string>(selectorSelector);
@@ -63,7 +65,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
 
     const {isSuccess,data,refetch} = useQuery([QueryKeys.CONTENT,"view","document",numberId], ()=>graphqlFetcher(GET_DOCUMENT,{id:numberId}),{
         onSuccess:({document})=>{
-            const [{document:code,selector,path,author}] = document;
+            const [{content:code,selector,path,author}] = document;
                 if(document.length > 0){
                     setAlertText("데이터를 세팅 성공!");
                     setCodeData(code);
@@ -87,8 +89,20 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     },[])
 
 
-    useEffect(()=>{
-    },[data])
+    const {mutate:modifyDocument} = useMutation(({id,content,path,author,imgUrl}:any)=>graphqlFetcher(MODIFY_DOCUMENT,{id:Number(id),content,path,author,imgUrl}),{
+        onSuccess:({modifyDocument:docs})=>{
+            // setAlertText("작성 완료! 홈으로 돌아가겠습니다.");
+            
+            navigate(`/`)
+        },
+        onError:(e)=>{
+            debugger
+            console.error(e);
+            setAlertFlag(true);
+            setAlertText("에러가 발생했습니다! ㅠㅠ")
+        }
+    });
+    
 
     const [loadedComponentList, setLoadedComponentList] = useState([]);
     const [componentList, setComponentList] = useState([]);
@@ -211,12 +225,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         {isSuccessComponent && loadedComponentList && loadedComponentlist.contentspath.map(({id:componentId,title,content})=>(
                                             <li>{title} <button onClick={e=>{
                                                 const uniqueid = v4();
+                                                console.log(title+ (componentList.length))
                                                 setComponentList([...componentList, {
                                                     id:componentList.length,
                                                     componentId,
                                                     uniqueid,
-                                                    title,
-                                                    content:`<div data-0sid='${uniqueid}'>${content}</div>`}])
+                                                    title: title+ (componentList.length),
+                                                    content:`<div data-0sid='${uniqueid}' data-0stitle='${title+ (componentList.length)}'>${content}</div>`}])
                                             }}>추가</button></li>
                                             ))}
                                     </ul>
@@ -225,7 +240,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                             <li className="accodian">
                                 <h2 onClick={()=>setStep(3)}>3. 컴포넌트의 순서를 결정해주세요.</h2>
                                 <div ref={step3} className="content">
-                                    <ReactSortable className="order-list" list={componentList} setList={(...arg) =>{
+                                    <ReactSortable animation={200} className="order-list" list={componentList} setList={(...arg) =>{
                                          let newArray = []
                                         if(arg[0].length > 0){
                                             iframe.current?.contentDocument?.querySelectorAll(".content-section > div").forEach((section,idx)=>{
@@ -262,7 +277,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                 </div>
                             </li>
                             <li>
-                                <button>문서 저장하기</button>
+                                <button className="saveButton" onClick={(e)=>{
+                                    const id = location.pathname.split("/").reverse()[0];
+                                    const content = document.querySelector("iframe")?.contentWindow?.document.querySelector(".content-section")?.innerHTML;
+                                    const author = window.localStorage.getItem("userid");
+                                    const imgUrl = "";
+                                    modifyDocument({id,content,path,author,imgUrl})
+                                }}>문서 저장하기</button>
                             </li>
                         </ul>
                     </div>

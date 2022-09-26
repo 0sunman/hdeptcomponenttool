@@ -310,10 +310,11 @@ type StyleMap = {
                     try{
                         const targetControl = element.dataset.targetControl;
                         const parentId = element.closest("div[data-0sid]")?.dataset["0sid"]
+                        const title = element.closest("div[data-0stitle]")?.dataset["0stitle"]
                         const [name,target] = targetControl.split("_");
                         const targets = target.split("-");
                         const controlRef = null;
-                        return [element,targets,name,parentId,controlRef]; // 1차 가공
+                        return [element,targets,name,parentId,controlRef,title]; // 1차 가공
     
                     }catch(error){
                         console.error(error);
@@ -333,9 +334,9 @@ type StyleMap = {
                                 let styleObj={};
                                 if(ele === "style"){
                                     styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4], style:styleObj})
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4], title:element[5], style:styleObj})
                                 }else{
-                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4]})
+                                    tempTotal.push({key:cnt, element: element[0], target: ele, name:element[2], parentId:element[3], controlRef:element[4], title:element[5]})
                                 }
                                 cnt++;
                             })
@@ -344,9 +345,9 @@ type StyleMap = {
                             let styleObj={};
                             if(element[1][0] === "style"){
                                 styleObj = createStyleMap( element[0].getAttribute("style") ) 
-                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4], style:styleObj})
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4], title:element[5], style:styleObj})
                             }else{
-                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4]})
+                                tempTotal.push({key:cnt, element: element[0], target: element[1][0], name:element[2], parentId:element[3], controlRef:element[4], title:element[5]})
                             }
         
                         }
@@ -379,14 +380,25 @@ type StyleMap = {
             setIframeDOM([])
         }
     },[])
-    useEffect(()=>{
-    },[iframeDOM])
 
-        let beforeTitle = "";
-        const createTitle = (name) => {
-            if(beforeTitle !== name){
-                beforeTitle = name;
-                return (<div className='group-title'>
+    let beforeTitle = "";
+    const createTitle = (name) => {
+        if(beforeTitle !== name){
+            beforeTitle = name;
+            return (<div className='group-title'>
+                <hr></hr>
+                <h2>- {name}</h2>
+            </div>)
+        }else{
+            return <></>;
+        }
+    }
+    let beforeBigTitle = "";
+        const createBigTitle = (name) => {
+            if(name === undefined) return <></>
+            if(beforeBigTitle !== name){
+                beforeBigTitle = name;
+                return (<div className='component-group-title'>
                     <hr></hr>
                     <h2>{name}</h2>
                 </div>)
@@ -421,9 +433,6 @@ type StyleMap = {
             return ele;
         }))
     }
-    useEffect(()=>{
-        console.log("ha");
-    })
     const testCheck = ()=>{
         document.querySelectorAll("textarea").forEach(element=>{
             element.click();
@@ -439,57 +448,72 @@ type StyleMap = {
         <div>
             <ImageUploaderPopup/>
             <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup} displaynone={displaynone}>
-                <div className="general" onChange={()=>{
-                    console.log("DIV Change");
-                }}>
+                <div className="general">
                     {
                         iframeDOM && iframeDOM.map((data:any)=>{
-                            const {element,target,name,style,key,parentId, controlRef} = data;
+                            const {element,target,name,style,key,parentId, controlRef,title} = data;
                             testCheck(element);
                             switch(target){
                                 case "href":
                                 return (
                                     <div>
-                                        {createTitle(name)}
-                                        <span className="content-title">링크 주소</span>
-                                        <textarea  className='input' type='text' 
-                                          onClick={(e)=>{
-                                                if(element.href !== e.target.value){
-                                                    e.target.value = element.href
-                                                }
-                                            }}
                                         
-                                        defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
-                                            element.href = e.target.value;
-                                        }}></textarea>
+                                        {createBigTitle(title)}
+                                        {createTitle(name)}
+                                        <div className="row-two">
+                                            <div>
+                                                <span className="content-title">링크 주소</span>
+                                            </div>
+                                            <div>                                                
+                                                <textarea  className='input' type='text' 
+                                                onClick={(e)=>{
+                                                        if(element.href !== e.target.value){
+                                                            e.target.value = element.href
+                                                        }
+                                                    }}
+                                                
+                                                defaultValue={element.href} className="control-input" onKeyUp={(e)=>{
+                                                    element.href = e.target.value;
+                                                }}></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                     )
 
                                 case "text":             
                                     return (
                                     <div>
-                                        {createTitle(name)}
-                                        <span className="control-title">텍스트</span>
-                                        <textarea 
-                                        defaultValue={element.innerText} className="control-input" data-parentId={parentId}
                                         
-                                        onClick={(e)=>{
-                                            if(element.innerText !== e.target.value){
-                                                e.target.value = element.innerText
-                                            }
-                                        }}
-                                         onChange={(e)=>{
-                                            element.innerText = e.target.value;
+                                        {createBigTitle(title)}
+                                        {createTitle(name)}
+                                        <div className="row-two">
+                                            <div>
+                                                <span className="control-title">텍스트</span>
+                                            </div>
+                                            <div>
+                                                <textarea 
+                                            defaultValue={element.innerText} className="control-input" data-parentId={parentId}
                                             
-                                            e.currentTarget.style.height = "12px";
-                                            e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
-                                        }}
+                                            onClick={(e)=>{
+                                                if(element.innerText !== e.target.value){
+                                                    e.target.value = element.innerText
+                                                }
+                                            }}
+                                            onChange={(e)=>{
+                                                element.innerText = e.target.value;
+                                                
+                                                e.currentTarget.style.height = "12px";
+                                                e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+                                            }}
 
-                                        onFocus={(e)=>{                                            
-                                            e.currentTarget.style.height = "12px";
-                                            e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+                                            onFocus={(e)=>{                                            
+                                                e.currentTarget.style.height = "12px";
+                                                e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
 
-                                        }}></textarea>
+                                            }}></textarea>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                     )
                                 
@@ -497,11 +521,21 @@ type StyleMap = {
                                 case "img":          
                                     return (
                                     <div>
+                                        
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
-                                        <span className="control-title">이미지</span>
-                                        <ImageUploader onImageChange={(data:any)=>{
-                                            element.src = data.imageUrl
-                                        }}></ImageUploader>
+                                        <div className="row-two">
+                                            <div>
+                                                <span className="control-title">이미지</span>
+                                            </div>
+                                            <div>
+                                                <ImageUploader onImageChange={(data:any)=>{
+                                                    element.src = data.imageUrl
+                                                }}></ImageUploader>
+                                            </div>
+                                        
+                                        
+                                            </div>
                                         {/* <input type='text' defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
                                             element.src = e.target.value;
                                         }}></input> */}
@@ -511,17 +545,27 @@ type StyleMap = {
                                 case "src":          
                                     return (
                                     <div>
+                                        
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
-                                        <span className="control-title">리소스 위치</span>
-                                        <textarea type='text' 
-                                        onClick={(e)=>{
-                                            if(element.src !== e.target.value){
-                                                e.target.value = element.src
-                                            }
-                                        }}
-                                        defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
-                                            element.src = e.target.value;
-                                        }}></textarea>
+                                        <div className="row-two">
+                                            <div>
+                                                <span className="control-title">리소스 위치</span>
+                                            </div>
+                                            <div>
+                                                <textarea type='text' 
+                                                    onClick={(e)=>{
+                                                        if(element.src !== e.target.value){
+                                                            e.target.value = element.src
+                                                        }
+                                                    }}
+                                                    defaultValue={element.src} className="control-input" onKeyUp={(e)=>{
+                                                        element.src = e.target.value;
+                                                }}></textarea>
+                                            </div>
+                                        </div>
+                                        
+                                        
                                     </div>
                                     )                        
 
@@ -536,6 +580,8 @@ type StyleMap = {
                                     }
                                     return (
                                         <div className="style-component">
+                                            
+                                        {createBigTitle(title)}
                                             {createTitle(name)}
                                             <div className="style-group">
                                                 <div>
@@ -547,70 +593,100 @@ type StyleMap = {
                                                         
                                                         {style.font.family !== null && style.font.family !==undefined && (<ul>
                                                             <li>
-                                                                <span className="control-title">종류</span>
-                                                                <input type="text" onChange={(e)=>{
-                                                                    const fontFamily = e.target.value;
-                                                                    setIframeDOM(changeStyle({
-                                                                        key,element,
-                                                                        type:"font",target:"family",value:fontFamily,
-                                                                        callback:()=>{
-                                                                            element.style.fontFamily = fontFamily;
-                                                                        }
-                                                                    }))
-                                                                }}></input>
+                                                                <div className="row-two">
+                                                                    <div>
+                                                                        <span className="control-title">종류</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <input type="text" onChange={(e)=>{
+                                                                            const fontFamily = e.target.value;
+                                                                            setIframeDOM(changeStyle({
+                                                                                key,element,
+                                                                                type:"font",target:"family",value:fontFamily,
+                                                                                callback:()=>{
+                                                                                    element.style.fontFamily = fontFamily;
+                                                                                }
+                                                                            }))
+                                                                        }}></input>
+                                                                    </div>
+                                                                </div>
                                                             </li>
                                                         </ul>)}
                                                         {style.font.size !== null && (<ul>
                                                             <li>
-                                                                <span className="control-title">크기</span>
-                                                                {typeof style.font.size === 'string' && <input className="inputViewer" type="text" value={style.font.size.replace("px","")*1}/>}
-                                                                {typeof style.font.size === 'string' && <input type="range" min="1" max="100" defaultValue={style.font.size.replace("px","")*1} onChange={(e)=>{
-                                                                    const fontSize = e.target.value+"px";
-                                                                    setIframeDOM(changeStyle({
-                                                                        key,element,
-                                                                        type:"font",target:"size",value:fontSize,
-                                                                        callback:()=>{
-                                                                            element.style.fontSize = fontSize;
-                                                                        }
-                                                                    }))
-                                                                }}/>}
+                                                                <div className="row-two">
+                                                                    <div>
+                                                                        <span className="control-title">크기</span>
+                                                                    </div>
+                                                                    <div>
+                                                                    {typeof style.font.size === 'string' && <input className="inputViewer" type="text" value={style.font.size.replace("px","")*1}/>}
+                                                                    {typeof style.font.size === 'string' && <input type="range" min="1" max="100" defaultValue={style.font.size.replace("px","")*1} onChange={(e)=>{
+                                                                        const fontSize = e.target.value+"px";
+                                                                        setIframeDOM(changeStyle({
+                                                                            key,element,
+                                                                            type:"font",target:"size",value:fontSize,
+                                                                            callback:()=>{
+                                                                                element.style.fontSize = fontSize;
+                                                                            }
+                                                                        }))
+                                                                    }}/>}
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                
                                                             </li>
                                                         </ul>)}
                                                         {style.font.color !== null && style.font.color !==undefined && (<ul>
                                                             <li>
-                                                                <span className="control-title">색상</span>
-                                                                <ChromePicker
-                                                                    color={style.font.color}
-                                                                    onChange={(color)=>{
-                                                                        const fontColor = color.hex;
-                                                                        setIframeDOM(changeStyle({
-                                                                            key,element,
-                                                                            type:"font",target:"color",value:fontColor,
-                                                                            callback:()=>{
-                                                                                element.style.color = fontColor;
-                                                                            }
-                                                                        }))
-                                                                    }}/>
+                                                                <div className="row-two">
+                                                                    <div>
+                                                                        <span className="control-title">색상</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <ChromePicker
+                                                                        color={style.font.color}
+                                                                        onChange={(color)=>{
+                                                                            const fontColor = color.hex;
+                                                                            setIframeDOM(changeStyle({
+                                                                                key,element,
+                                                                                type:"font",target:"color",value:fontColor,
+                                                                                callback:()=>{
+                                                                                    element.style.color = fontColor;
+                                                                                }
+                                                                            }))
+                                                                        }}/>
+                                                                    </div>
+                                                                </div>
+                                                               
+                                                                
                                                             </li>
                                                         </ul>)}
                                                         {style.font.align !== null && style.font.align !==undefined && (<ul>
                                                             <li>
-                                                                <span className="control-title">정렬</span>
-                                                                <select onChange={(e)=>{
-                                                                    const textAlign = e.target.value;
-                                                                    setIframeDOM(changeStyle({
-                                                                        key,element,
-                                                                        type:"font",target:"align",value:textAlign,
-                                                                        callback:()=>{
-                                                                            element.style.textAlign = textAlign;
-                                                                        }
-                                                                    }))
-                                                                    }}>
-                                                                    <option value="">없음</option>
-                                                                    <option value="left">좌측</option>
-                                                                    <option value="center">중앙</option>
-                                                                    <option value="right">우측</option>
-                                                                </select>
+                                                                <div className="row-two">
+                                                                    <div>
+                                                                        <span className="control-title">정렬</span>
+                                                                    </div>
+                                                                    <div>
+
+                                                                        <select onChange={(e)=>{
+                                                                            const textAlign = e.target.value;
+                                                                            setIframeDOM(changeStyle({
+                                                                                key,element,
+                                                                                type:"font",target:"align",value:textAlign,
+                                                                                callback:()=>{
+                                                                                    element.style.textAlign = textAlign;
+                                                                                }
+                                                                            }))
+                                                                            }}>
+                                                                            <option value="">없음</option>
+                                                                            <option value="left">좌측</option>
+                                                                            <option value="center">중앙</option>
+                                                                            <option value="right">우측</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                
                                                             </li>
                                                         </ul>)}
                                                     </div>)}
@@ -620,8 +696,9 @@ type StyleMap = {
                                                     <ul>
                                                         {style.box.marginTop !== null   && style.box.marginTop !==undefined && (
                                                             <li>
-                                                                <span className="control-title">마진 - 상단</span>
-                                                                <input className="inputViewer" type="text" value={style.box.marginTop.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">마진 - 상단</span></div>
+                                                                <div> <input className="inputViewer" type="text" value={style.box.marginTop.replace("px","")*1}/>
                                                                 <input type="range" min="1" max="100" defaultValue={style.box.marginTop.replace("px","")} onChange={(e)=>{
                                                                     const marginTop = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
@@ -631,13 +708,17 @@ type StyleMap = {
                                                                             element.style.marginTop = marginTop;
                                                                         }
                                                                     }))
-                                                                }}/> 
+                                                                }}/> </div>
+                                                            </div>
+                                                                
+                                                               
                                                             </li>
                                                         )}
                                                         {style.box.marginRight !== null && style.box.marginRight !==undefined && (
                                                             <li>
-                                                                <span className="control-title">마진 - 우측</span>
-                                                                <input className="inputViewer" type="text" value={style.box.marginRight.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">마진 - 우측</span></div>
+                                                                <div> <input className="inputViewer" type="text" value={style.box.marginRight.replace("px","")*1}/>
                                                                 <input type="range" min="1" max="100" defaultValue={style.box.marginRight.replace("px","")} onChange={(e)=>{
                                                                     const marginRight = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
@@ -647,13 +728,17 @@ type StyleMap = {
                                                                             element.style.marginRight = marginRight;
                                                                         }
                                                                     }))
-                                                                }}/>
+                                                                }}/></div>
+                                                            </div>
+                                                                
+                                                               
                                                             </li>
                                                         )}
                                                         {style.box.marginBottom !== null && style.box.marginBottom !==undefined && (
                                                             <li>
-                                                                <span className="control-title">마진 - 하단</span>
-                                                                <input className="inputViewer" type="text" value={style.box.marginBottom.split(" ")[0].replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">마진 - 하단</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.marginBottom.split(" ")[0].replace("px","")*1}/>
                                                                 <input type="range" min="1" max="100" defaultValue={style.box.marginBottom.split(" ")[0].replace("px","")} onChange={(e)=>{
                                                                     const marginBottom = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
@@ -663,13 +748,18 @@ type StyleMap = {
                                                                             element.style.marginBottom = marginBottom;
                                                                         }
                                                                     }))
-                                                                }}/>
+                                                                }}/></div>
+                                                            </div>
+                                                                
+                                                                
                                                             </li>
                                                         )}
                                                         {style.box.marginLeft !== null  && style.box.marginLeft !==undefined && (
                                                             <li>
-                                                                <span className="control-title">마진 - 좌측</span>
-                                                                <input className="inputViewer" type="text" value={style.box.marginLeft.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div>
+                                                                <span className="control-title">마진 - 좌측</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.marginLeft.replace("px","")*1}/>
                                                                 <input type="range" min="1" max="100" defaultValue={style.box.marginLeft.replace("px","")} onChange={(e)=>{
                                                                     const marginLeft = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
@@ -679,7 +769,9 @@ type StyleMap = {
                                                                             element.style.marginLeft = marginLeft;
                                                                         }
                                                                     }))
-                                                                }}/>
+                                                                }}/></div>
+                                                            </div>
+                                                                
                                                             </li>
                                                         )}
                                                     </ul>
@@ -687,8 +779,10 @@ type StyleMap = {
                                                     <ul>
                                                     {style.box.borderColor !== null && style.box.borderColor !==undefined && (
                                                             <li>
-                                                            <span className="control-title">테두리 - 색상</span>
-                                                            <ChromePicker
+                                                            <div className="row-two">
+                                                                <div>
+                                                            <span className="control-title">테두리 - 색상</span></div>
+                                                                <div><ChromePicker
                                                                 color={style.box.borderColor}
                                                                 onChange={(color)=>{
                                                                     const borderColor = color.hex;
@@ -699,14 +793,17 @@ type StyleMap = {
                                                                             element.style.borderColor = borderColor;
                                                                         }
                                                                     }))
-                                                                }}/>
+                                                                }}/></div>
+                                                            </div>
+                                                            
 
                                                             </li>
                                                             )}
                                                     {style.box.borderTop !== null && style.box.borderTop !==undefined && (
                                                             <li>
-                                                            <span className="control-title">테두리 - 상단</span>
-                                                            <input className="inputViewer" type="text" value={style.box.borderTop.split(" ")[0].replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div> <span className="control-title">테두리 - 상단</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.borderTop.split(" ")[0].replace("px","")*1}/>
                                                             <input type="range" min="0" max="100" defaultValue={style.box.borderTop.split(" ")[0].replace("px","")*1} onChange={(e)=>{
                                                                 const borderTop = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -717,15 +814,19 @@ type StyleMap = {
                                                                         element.style.borderTop = borderTop + "px solid "+color;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                           
+                                                            
 
                                                             </li>
                                                             )}
                                                             
                                                     {style.box.borderRight !== null && style.box.borderRight !==undefined && (
                                                             <li>
-                                                            <span className="control-title">테두리 - 우측</span>
-                                                            <input className="inputViewer" type="text" value={style.box.borderRight.split(" ")[0].replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">테두리 - 우측</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.borderRight.split(" ")[0].replace("px","")*1}/>
                                                             <input type="range" min="0" max="100" defaultValue={style.box.borderRight.split(" ")[0].replace("px","")*1} onChange={(e)=>{
                                                                 const borderRight = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -736,15 +837,19 @@ type StyleMap = {
                                                                         element.style.borderRight = borderRight + "px solid "+color;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
                                                             </li>
                                                             )}
                                                             
                                                     {style.box.borderBottom !== null && style.box.borderBottom !==undefined && (
                                                             <li>
-                                                            <span className="control-title">테두리 - 하단</span>
-                                                            <input className="inputViewer" type="text" value={style.box.borderBottom.split(" ")[0].replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">테두리 - 하단</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.borderBottom.split(" ")[0].replace("px","")*1}/>
                                                             <input type="range" min="0" max="100" defaultValue={style.box.borderBottom.split(" ")[0].replace("px","")*1} onChange={(e)=>{
                                                                 const borderBottom = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -755,15 +860,19 @@ type StyleMap = {
                                                                         element.style.borderBottom = borderBottom + "px solid "+color;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
                                                             </li>
                                                             )}
                                                             
                                                     {style.box.borderLeft !== null && style.box.borderLeft !==undefined && (
                                                             <li>
-                                                            <span className="control-title">테두리 - 좌측</span>
-                                                            <input className="inputViewer" type="text" value={style.box.borderLeft.split(" ")[0].replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">테두리 - 좌측</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.borderLeft.split(" ")[0].replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.borderLeft.split(" ")[0].replace("px","")*1} onChange={(e)=>{
                                                                 const borderLeft = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -774,7 +883,10 @@ type StyleMap = {
                                                                         element.style.borderLeft = borderLeft + "px solid "+color;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
                                                             
                                                             </li>
@@ -786,8 +898,9 @@ type StyleMap = {
                                                         
                                                     {style.box.paddingTop !== null && style.box.paddingTop !==undefined && (
                                                             <li>
-                                                            <span className="control-title">패딩 - 상단</span>
-                                                            <input className="inputViewer" type="text" value={style.box.paddingTop.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">패딩 - 상단</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.paddingTop.replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.paddingTop} onChange={(e)=>{
                                                                 const paddingTop = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -797,7 +910,10 @@ type StyleMap = {
                                                                         element.style.paddingTop = paddingTop;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
 
                                                             </li>
@@ -806,8 +922,9 @@ type StyleMap = {
                                                             
                                                     {style.box.paddingRight !== null && style.box.paddingRight !==undefined && (
                                                             <li>
-                                                            <span className="control-title">패딩 - 우측</span>
-                                                            <input className="inputViewer" type="text" value={style.box.paddingRight.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">패딩 - 우측</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.paddingRight.replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.paddingRight} onChange={(e)=>{
                                                                 const paddingRight = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -817,7 +934,10 @@ type StyleMap = {
                                                                         element.style.paddingRight = paddingRight;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
 
                                                             </li>
@@ -826,8 +946,9 @@ type StyleMap = {
                                                             
                                                     {style.box.paddingBottom !== null && style.box.paddingBottom !==undefined && (
                                                             <li>
-                                                            <span className="control-title">패딩 - 하단</span>
-                                                            <input className="inputViewer" type="text" value={style.box.paddingBottom.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">패딩 - 하단</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.paddingBottom.replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.paddingBottom} onChange={(e)=>{
                                                                 const paddingBottom = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -837,7 +958,10 @@ type StyleMap = {
                                                                         element.style.paddingBottom = paddingBottom;
                                                                     }
                                                                 }))
-                                                            }}/>
+                                                            }}/></div>
+                                                            </div>
+                                                            
+                                                            
 
 
                                                             </li>
@@ -847,8 +971,10 @@ type StyleMap = {
                                                             
                                                     {style.box.paddingLeft !== null && style.box.paddingLeft !==undefined && (
                                                             <li>
-                                                            <span className="control-title">패딩 - 좌측</span>
-                                                            <input className="inputViewer" type="text" value={style.box.paddingLeft.replace("px","")*1}/>
+                                                            <div className="row-two">
+                                                                <div>
+                                                            <span className="control-title">패딩 - 좌측</span></div>
+                                                                <div><input className="inputViewer" type="text" value={style.box.paddingLeft.replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.paddingLeft} onChange={(e)=>{
                                                                 const paddingLeft = e.target.value;
                                                                 setIframeDOM(changeStyle({
@@ -859,7 +985,9 @@ type StyleMap = {
                                                                     }
                                                                 }))
                                                             }}/>
-
+</div>
+                                                            </div>
+                                                            
                                                             
                                                             </li>
                                                             )}
@@ -871,8 +999,9 @@ type StyleMap = {
                                                     <ul>
                                                         {style.background.backgroundImage !== null   && style.background.backgroundImage !==undefined && (
                                                             <li>
-                                                                <span className="control-title">이미지</span>
-                                                                <ImageUploader onImageChange={(data:any)=>{
+                                                            <div className="row-two">
+                                                                <div><span className="control-title">이미지</span></div>
+                                                                <div><ImageUploader onImageChange={(data:any)=>{
                                                                     setIframeDOM(changeStyle({
                                                                         key,element,
                                                                         type:"background",target:"backgroundImage",value:data.imageUrl,
@@ -880,15 +1009,20 @@ type StyleMap = {
                                                                             element.style.backgroundImage = `url(${data.imageUrl})`;
                                                                         }
                                                                     }))
-                                                                }}></ImageUploader>
+                                                                }}></ImageUploader></div>
+                                                            </div>
+                                                                
+                                                                
                                                             </li>
                                                         )}
 
                                                         
                                                         {style.background.backgroundColor !== null   && style.background.backgroundColor !==undefined && (
                                                             <li>
-                                                                <span className="control-title">색상</span>
-                                                                <ChromePicker
+                                                            <div className="row-two">
+                                                                <div>
+                                                                <span className="control-title">색상</span></div>
+                                                                <div> <ChromePicker
                                                                     color={style.background.backgroundColor}
                                                                     onChange={(color)=>{
                                                                         const backgroundColor = color.hex;
@@ -899,7 +1033,9 @@ type StyleMap = {
                                                                                 element.style.backgroundColor = backgroundColor;
                                                                             }
                                                                         }))
-                                                                    }}/>
+                                                                    }}/></div>
+                                                            </div>
+                                                               
                                                             </li>
                                                         )}
                                                     </ul>
@@ -912,6 +1048,8 @@ type StyleMap = {
                                 case "class":
                                     return (
                                     <div>
+                                        
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <span className="control-title">클래스명</span>
                                         <input type='text' defaultValue={element.getAttribute("class")} className="control-input" onKeyUp={(e)=>{
@@ -923,9 +1061,12 @@ type StyleMap = {
                                 case "clone":
                                     return (
                                     <div>
+                                        
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
-                                        <span className="control-title">추가하기</span>
-                                        <button className="control-input" onClick={(e)=>{
+                                        <div className="row-two">
+                                        <div><span className="control-title">추가하기</span></div>
+                                        <div><button className="control-input" onClick={(e)=>{
                                             const cloneTarget = element.cloneNode(true);
                                             element.parentElement.append(cloneTarget);
                                             setCodeData(((ref.current) as HTMLIFrameElement).contentDocument!.querySelector(".content-section")!.innerHTML);
@@ -933,11 +1074,17 @@ type StyleMap = {
                                             const targetName = "New "+name+ (newIframeDOM.length+1);
                                             element.dataset.targetControl.split("_")[1].split("-").forEach((targetname:string)=>{
                                                 if(targetname !== "clone"){
-                                                    newIframeDOM = ([...newIframeDOM, {key:newIframeDOM.length+1, element:cloneTarget, data, target:targetname, name:targetName, style:iframeDOM.filter(data => data.element === element)?.find(data => data.style)?.style}])
+                                                    newIframeDOM = ([...iframeDOM, {key:newIframeDOM.length+1, element:cloneTarget, data, target:targetname, name:targetName, style:iframeDOM.filter(data => data.element === element)?.find(data => data.style)?.style
+                                                        ,parentId, controlRef, title
+                                                    }])
                                                 }
                                             })
                                             setIframeDOM(newIframeDOM);
-                                        }}>+</button>
+                                            setIsPreviewDOMLoaded(true);
+                                        }}>+</button></div>
+                                        </div>
+                                        
+                                        
                                     </div>
                                     )
     

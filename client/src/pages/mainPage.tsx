@@ -11,7 +11,7 @@ import { graphqlFetcher } from "../lib/queryClient";
 import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState, isNewDocumentState } from "../recoils/pages";
 import arrToObj from "../util/arrToObj";
 import ListContainer from "../container/ListContainer";
-import { ADD_DOCUMENT } from "../graphql/documents";
+import { ADD_DOCUMENT, MODIFY_DOCUMENT } from "../graphql/documents";
 
 
 
@@ -71,6 +71,7 @@ const MainPage = () => {
             setAlertText("에러가 발생했습니다! ㅠㅠ")
         }
     });
+
 
 
 
