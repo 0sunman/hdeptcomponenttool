@@ -8,7 +8,8 @@ export const GET_DOCUMENT = gql`
             author,
             path,
             selector,
-            imgUrl
+            imgUrl,
+            componentList
         }
 
     }
@@ -23,7 +24,8 @@ export const GET_DOCUMENT_LIKE = gql`
             author,
             path,
             selector,
-            imgUrl
+            imgUrl,
+            componentList
         }
 
     }
@@ -80,14 +82,15 @@ export const ADD_DOCUMENT = gql`
 `
 
 export const MODIFY_DOCUMENT = gql`
-    mutation Mutation($id: Int!, $content: String, $selector: String, $title: String, $imgUrl:String, $path:String, $author:String) {
-        modifyDocument(id: $id, content: $content, selector: $selector, title: $title, imgUrl:$imgUrl, path:$path, author:$author) {
+    mutation Mutation($id: Int!, $content: String, $selector: String, $title: String, $imgUrl:String, $path:String, $author:String, $componentList:String) {
+        modifyDocument(id: $id, content: $content, selector: $selector, title: $title, imgUrl:$imgUrl, path:$path, author:$author, componentList:$componentList) {
             selector
             title
             content
             path,
             author
-            imgUrl
+            imgUrl,
+            componentList
         }
   }
 `
