@@ -77,7 +77,7 @@ const ListContainer = ()=>{
             throw Error("에러발생!!!")
         }});
 
-    const {data:list_doc, isSuccess:isDocSuccess} = useQuery(["document","all"],()=>graphqlFetcher(GET_DOCUMENTS_AUTHOR,{author:window.localStorage.userid}),{
+    const {data:list_doc, isSuccess:isDocSuccess} = useQuery(["document","all"],()=>graphqlFetcher(GET_DOCUMENTS_AUTHOR,{author:window.localStorage.getItem("userid") !== null ? window.localStorage.getItem("userid") : ""}),{
         onSuccess:({data})=>{    
             setAlertText("환영합니다!<br><br>모바일 페이지로는 현재 개발이 안돼있어서... 깨져나올거에요!<br>추후에 개발 예정이며<br>태블릿이나 PC로 오세요!");
         }, 
@@ -118,11 +118,11 @@ const ListContainer = ()=>{
             {cdTab==="component" && <div className="ListComponent">
             
                 { 
-                    list.contents.map((record:any)=>{ 
+                    list.contents.map((record:any,idx:any)=>{ 
                     //record
                     return (
-                        <ListItem imgUrl={record.imgUrl}>
-                            <Link to={`/detail/${record.id}`}>{record.title}</Link>
+                        <ListItem imgUrl={record.imgUrl} key={idx}>
+                            <Link to={`/detail/${record.id}`} >{record.title}</Link>
                         </ListItem>
                         )
                     })
@@ -132,11 +132,11 @@ const ListContainer = ()=>{
             {cdTab==="document" && (<div className="ListComponent">
             
                 { 
-                    list_doc.documentsauthor.map((record:any) =>{ 
+                    list_doc.documentsauthor.map((record:any,idx:any) =>{ 
                     //record
                     return (
-                        <div className="DocumentElement">
-                            <Link to={`/document/${record.id}`}>{record.title}</Link>
+                        <div className="DocumentElement" key={idx}>
+                            <Link to={`/document/${record.id}`} >{record.title}</Link>
                         </div>
                         )
                     })

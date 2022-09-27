@@ -157,7 +157,7 @@ const MainPage = () => {
         if(userid === null || token === null){ 
             setIsLogin(false)
         }else{
-            isLoginConfirm({userid,token});
+            isLoginConfirm({userid : ((userid) ? userid:""),token:((token)?token:"")});
         }
     },[])
     const setLoginPage = (e:SyntheticEvent) =>{

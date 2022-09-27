@@ -450,13 +450,13 @@ type StyleMap = {
             <ControlPaneContainer copyCode={doCopyClipboard} ImageUploader={openImageUploaderPopup} displaynone={displaynone}>
                 <div className="general">
                     {
-                        iframeDOM && iframeDOM.map((data:any)=>{
+                        iframeDOM && iframeDOM.map((data:any, idx:any)=>{
                             const {element,target,name,style,key,parentId, controlRef,title} = data;
                             testCheck(element);
                             switch(target){
                                 case "href":
                                 return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -482,7 +482,7 @@ type StyleMap = {
 
                                 case "text":             
                                     return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -520,7 +520,7 @@ type StyleMap = {
                                  
                                 case "img":          
                                     return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -544,7 +544,7 @@ type StyleMap = {
                                                 
                                 case "src":          
                                     return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -579,7 +579,7 @@ type StyleMap = {
                                         return false;
                                     }
                                     return (
-                                        <div className="style-component">
+                                        <div className="style-component" key={idx}>
                                             
                                         {createBigTitle(title)}
                                             {createTitle(name)}
@@ -1047,7 +1047,7 @@ type StyleMap = {
                             
                                 case "class":
                                     return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -1060,7 +1060,7 @@ type StyleMap = {
 
                                 case "clone":
                                     return (
-                                    <div>
+                                    <div key={idx}>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}

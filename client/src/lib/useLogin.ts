@@ -35,7 +35,8 @@ const useLogin = () =>{
             setIsLogin(false);
             navigate("/")
         }else{
-            isLoginConfirm({userid,token});
+
+            isLoginConfirm({userid : ((userid) ? userid:""),token:((token)?token:"")});
         }
     },[])
 

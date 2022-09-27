@@ -11,6 +11,21 @@ import DevContainer from "./dev";
 import styled from "styled-components";
 import { ADD_DOCUMENT, GET_DOCUMENT } from "../../graphql/documents";
 
+
+
+const ResizeLayout = styled.div`
+        
+`
+const ResizeLayoutFrame = styled.div`
+    position:relative; width:${prop => prop.width}%; height:100%;
+`
+const ResizeLayoutFrameDimmed = styled.div`
+    position:absolute; top:0; left:0; width:100%; height:100%; background:${prop => prop.color}; opacity:0.5; 
+`
+const ResizeLayoutHandle = styled.div`
+    position:fixed; top:0; left:calc(${prop => prop.positionX}% - 20px); width:20px; height:100%; background-color:#45675b 
+`
+
 const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const param = useParams<string>();
     const iframe = useRef<HTMLIFrameElement>(null);
@@ -69,18 +84,6 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
 // </DetailPageComponent>
 
 
-    const ResizeLayout = styled.div`
-        
-    `
-    const ResizeLayoutFrame = styled.div`
-        position:relative; width:${prop => prop.width}%; height:100%;
-    `
-    const ResizeLayoutFrameDimmed = styled.div`
-        position:absolute; top:0; left:0; width:100%; height:100%; background:${prop => prop.color}; opacity:0.5; 
-    `
-    const ResizeLayoutHandle = styled.div`
-        position:fixed; top:0; left:calc(${prop => prop.positionX}% - 20px); width:20px; height:100%; background-color:#45675b 
-    `
     const handle = useRef<HTMLDivElement>(null)
     const [positionX, setPositionX] = useState<number>(70);
     const [flag, setFlag] = useState<boolean>(false);
