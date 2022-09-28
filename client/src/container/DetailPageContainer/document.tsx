@@ -12,6 +12,7 @@ import styled from "styled-components";
 import { ADD_DOCUMENT, GET_DOCUMENT, MODIFY_DOCUMENT } from "../../graphql/documents";
 import useResizeHooks from "../../lib/useResize";
 import { ReactSortable } from "react-sortablejs";
+import copyClipboard from "../../util/copyClipboard";
 import {v4} from 'uuid';
 const ResizeLayout = styled.div`
         
@@ -56,11 +57,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     const [loadedComponentList, setLoadedComponentList] = useState([]);
     const [componentsList, setComponentList] = useState<[]>([]);
     const [newArray, setNewArray] = useState([]);
+    let componentId = useRef(0);
     useEffect(()=>{
         setIdState(id);
     },[id]);
     useEffect(()=>{
         loadedComponentRefetch()
+        componentId = componentsList.length + 1;
     },[path])
 
     const [isSuccessComponent, loadedComponentlist, loadedComponentRefetch] = loadComponentList(path);
@@ -124,6 +127,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
     },[componentsList])
     const [step1,step2,step3,step4] = [useRef(null),useRef(null),useRef(null),useRef(null)]
     useEffect(()=>{
+
         if(step1.current !== null|| step2.current !== null|| 
             step3.current !== null|| step4.current !== null){
             step1.current.style.display = "none"
@@ -135,6 +139,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
             if(step === 1){
                 step1.current.style.display = "block"
             }else if(step ===2 || step ===3){
+
                 step2.current.style.display = "block"
                 step3.current.style.display = "block"
             }else if(step === 4){
@@ -205,15 +210,25 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                 </div>
                             </li>
                             <li className="accodian">
-                                <h2 onClick={()=>{ setStep(2)}}>2. 사용할 컴포넌트를 추가해주세요</h2>
+                                <h2 onClick={()=>{
+                                    
+
+                                    const componentlist = componentsList.map((component:any) => {
+                                        component.content = top.document.querySelector("iframe")?.contentWindow?.document.querySelector(`div[data-0sid*='${component.uniqueid}']`)?.outerHTML;
+                                        return component;
+                                    });
+                                    setComponentList(componentlist)
+                                    setStep(3)
+                                    }}>2. 사용할 컴포넌트를 추가해주세요</h2>
                                 <div ref={step2} className="content">
                                     
                                     <ul className="add-list">
                                         {isSuccessComponent && loadedComponentList && loadedComponentlist.contentspath.map(({id:componentId,title,content})=>(
                                             <li>{title} <button onClick={e=>{
                                                 const uniqueid = v4();
+                                                componentId++;
                                                 setComponentList([...componentsList, {
-                                                    id:componentsList.length,
+                                                    id:v4(),
                                                     componentId,
                                                     uniqueid,
                                                     title: title+ (componentsList.length),
@@ -224,7 +239,16 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                 </div>
                             </li>
                             <li className="accodian">
-                                <h2 onClick={()=>setStep(3)}>3. 컴포넌트의 순서를 결정해주세요.</h2>
+                                <h2 onClick={()=>{
+                                    
+
+                                    const componentlist = componentsList.map((component:any) => {
+                                        component.content = top.document.querySelector("iframe")?.contentWindow?.document.querySelector(`div[data-0sid*='${component.uniqueid}']`)?.outerHTML;
+                                        return component;
+                                    });
+                                    setComponentList(componentlist)
+                                    setStep(3)
+                                    }}>3. 컴포넌트의 순서를 결정해주세요.</h2>
                                 <div ref={step3} className="content">
                                     <ReactSortable animation={200} className="order-list" list={componentsList} setList={(...arg) =>{
                                         if(arg[0].length > 0){
@@ -233,9 +257,13 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         }
                                         
                                         }}>
-                                        {componentsList?.map(({id, title}:any)=><div>
-                                            {id}{' '}{title} 
-                                        </div>)}
+                                        {componentsList?.map(({id, title}:any,idx)=>{
+                                        
+                                        return <div>
+                                             - [{(idx+1)}]{' '}{title} <button onClick={()=>{
+                                                setComponentList(componentsList.filter((component)=> component.id !== id))
+                                            }}>삭제</button>
+                                        </div>})}
                                     </ReactSortable>
                                 </div>
                                 
@@ -248,9 +276,12 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                 </div>
                             </li>
                             <li>
+                                <button className="copyButton" onClick={(e)=>{
+                                    copyClipboard(document.querySelector("iframe")?.contentWindow?.document.querySelector(".content-section")?.innerHTML);
+                                }}>코드 복사하기</button>
                                 <button className="saveButton" onClick={(e)=>{
                                     const id = location.pathname.split("/").reverse()[0];
-                                    const content = document.querySelector("iframe")?.contentWindow?.document.querySelector(".content-section")?.innerHTML;
+                                    
                                     const author = window.localStorage.getItem("userid");
                                     const imgUrl = "";
                                     
@@ -258,8 +289,14 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         component.content = document.querySelector("iframe")?.contentWindow?.document.querySelector(`div[data-0sid*='${component.uniqueid}']`)?.outerHTML;
                                         return component;
                                     }));
+                                    
+                                    const content = (componentsList.reduce((init:string,value:any)=>{
+                                        init += value.content;
+                                        return init;
+                                    },""));
                                     modifyDocument({id,content,path,author,imgUrl,componentList:componentlist})
                                 }}>문서 저장하기</button>
+                                
                             </li>
                         </ul>
                     </div>

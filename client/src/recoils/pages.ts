@@ -20,7 +20,8 @@ type SiteInfo = {
         imgUpload:ImageUploader
     }
     "IFrameDOM":[],
-    "IFrameDOMValue":[]
+    "IFrameDOMValue":[],
+    "isQRPopup":boolean
 
 }
 type Page = {
@@ -39,6 +40,7 @@ type ImageUploader = {
 export const SiteInfo = atom<SiteInfo>({
     key:"SiteInfo",
     default:{
+        "isQRPopup":false,
         "currentTarget":"component",
         "isLoginPopup":true,
         "isNewDocument":false,
@@ -249,4 +251,14 @@ export const isNewDocumentState = selector({
         }
     }
 
+})
+
+export const QRPopupSelector = selector({
+    key:"QRPopupSelector",
+    get:({get})=>get(SiteInfo).isQRPopup,
+    set:({get,set},newValue)=>{
+        if(typeof newValue === "boolean"){
+            set(SiteInfo,{...get(SiteInfo), "isQRPopup":newValue})
+        }
+    }
 })

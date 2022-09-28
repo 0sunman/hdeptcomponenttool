@@ -3,6 +3,7 @@ import GlobalLayout from "./pages/_layout"
 const MainPage = React.lazy(()=>import('./pages/mainPage'));
 const DetailPage = React.lazy(()=>import('./pages/detailPage'));
 const WritePage = React.lazy(()=>import('./pages/writePage'));
+const ViewPage = React.lazy(()=>import('./pages/ViewPage'));
 
 export const routes = [
     {
@@ -14,7 +15,11 @@ export const routes = [
             {path :"/detail/dev/:id", element:<DetailPage/>,index:false},
             {path :"/document/:id", element:<DetailPage/>,index:false},
             {path :"/document/dev/:id", element:<DetailPage/>,index:false},
-            {path :"/write", element:<WritePage/>,index:false}
+            {path :"/write", element:<WritePage/>,index:false},
         ]
-    }
+    },
+    
+    
+    {path :"/page/:id", 
+    element :<ViewPage/>}
 ]

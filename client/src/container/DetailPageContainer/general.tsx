@@ -456,7 +456,7 @@ type StyleMap = {
                             switch(target){
                                 case "href":
                                 return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -482,7 +482,7 @@ type StyleMap = {
 
                                 case "text":             
                                     return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -520,7 +520,7 @@ type StyleMap = {
                                  
                                 case "img":          
                                     return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -544,7 +544,7 @@ type StyleMap = {
                                                 
                                 case "src":          
                                     return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -579,7 +579,7 @@ type StyleMap = {
                                         return false;
                                     }
                                     return (
-                                        <div className="style-component" key={idx}>
+                                        <div className="style-component">
                                             
                                         {createBigTitle(title)}
                                             {createTitle(name)}
@@ -1047,7 +1047,7 @@ type StyleMap = {
                             
                                 case "class":
                                     return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}
@@ -1060,7 +1060,7 @@ type StyleMap = {
 
                                 case "clone":
                                     return (
-                                    <div key={idx}>
+                                    <div>
                                         
                                         {createBigTitle(title)}
                                         {createTitle(name)}

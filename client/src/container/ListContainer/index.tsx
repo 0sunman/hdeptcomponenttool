@@ -6,7 +6,8 @@ import styled from "styled-components";
 import { GET_CONTENTS } from "../../graphql/contents";
 import { GET_DOCUMENTS, GET_DOCUMENTS_AUTHOR } from "../../graphql/documents";
 import { graphqlFetcher, QueryKeys } from "../../lib/queryClient";
-import { alertSelector, alertTextSelector } from "../../recoils/pages";
+import { alertSelector, alertTextSelector, QRPopupSelector } from "../../recoils/pages";
+import QRCode from 'qrcode';
 
 const ListComponent = styled.ul`
     display:block;width:100%;list-style:none;margin:0px;padding:0px;text-align:center;
@@ -64,6 +65,7 @@ const SearchKeyword = styled.div`
 `
 
 const ListContainer = ()=>{
+    const [isQRPopup, setIsQRPopup] = useRecoilState(QRPopupSelector)
     const [cdTab, setCdTab] = useState("component");
     const [[alertFlag,setAlertFlag],[alertText,setAlertText]] = [useRecoilState<boolean>(alertSelector), useRecoilState<string>(alertTextSelector)];
     const {data:list, isSuccess} = useQuery([QueryKeys.CONTENT,"view","all"],()=>graphqlFetcher(GET_CONTENTS),{
@@ -136,7 +138,25 @@ const ListContainer = ()=>{
                     //record
                     return (
                         <div className="DocumentElement" key={idx}>
-                            <Link to={`/document/${record.id}`} >{record.title}</Link>
+                            <div>
+                                {record.title}
+                                <div className="ButtonList">
+                                    <Link to={`/document/${record.id}`} >수정</Link>
+                                    <a href={`/page/${record.id}`} target="_blank">보기</a>
+                                    <a onClick={()=>{ alert('개발중 ㅠ');}} >삭제</a>
+                                    <a onClick={()=>{
+                                        setIsQRPopup(true);
+                                        setTimeout(()=>{
+                                                                                
+                                            QRCode.toCanvas(document.querySelector("#qrcodeCanvas"),
+                                            `https://ts.thehyundai.works/page/${record.id}`, { toSJISFunc: QRCode.toSJIS }, function (error) {
+                                            if (error) console.error(error)
+                                            console.log('success!')
+                                            })
+                                        },100)
+                                    }}>QR코드</a>
+                                </div>
+                            </div>
                         </div>
                         )
                     })

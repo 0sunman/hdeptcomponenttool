@@ -6,13 +6,12 @@ import { UserLoginState, UserRuleState } from "../recoils/pages";
 
 
 const writePage = () =>{
-    const [isLoginState, role] = useLogin();
-    const [isLogin, setIsLogin] = useRecoilState(UserLoginState);
+    const [isLogin, role] = useLogin();
+    const [isLoginRecoil, setIsLogin] = useRecoilState(UserLoginState);
     const [rule, setRule] = useRecoilState(UserRuleState);
     useEffect(()=>{
-//        writePage;
-        setIsLogin(isLoginState);
-    },[isLoginState]);
+        setIsLogin(isLoginRecoil);
+    },[isLogin]);
     useEffect(()=>{
         setRule(rule);
     },[role]);

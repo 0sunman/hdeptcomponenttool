@@ -227,7 +227,8 @@ html, body{height:100vh}
 .controller .style-component .style-group >  div:last-child{display: inline-flex; width:80%}
 input.inputViewer{width:10% !important; text-align: center;}
 .component-group-title{width: 100%;}
-.document-editor .saveButton{width:100%;  padding:10px; background-color: #85675b; border:0; color:white}
+.document-editor .saveButton{width:100%;  padding:10px; background-color: #85675b; border:0; color:white; cursor: pointer;}
+.document-editor .copyButton{width:100%;  padding:10px; background-color: #770000; border:0; color:white;  cursor: pointer;}
 
 .CDTab{display: flex; width: 100%;}
 .CDTab > div{display:inline-flex; width:50%; height:40px; background-color: #45675b; 
@@ -236,3 +237,7 @@ input.inputViewer{width:10% !important; text-align: center;}
 .CDTab > div.active{background-color: white; color:#000}
 
 .DocumentElement{display:inline-flex; width:100%; height: 40px; justify-content: center; align-items: center; border-bottom: 1px solid #45675b;}
+.DocumentElement > div{ display:flex; width:95%}
+.ButtonList{display: inline-block; margin-left:auto;}
+.ButtonList a,.ButtonList button{display:inline-block;  padding:5px 15px; margin-left: 5px; border: 0; background-color: #45675b; color:#fff}
+.qrpopup > div{display: inline-flex; flex-direction: column; justify-content: center; align-items: center;}

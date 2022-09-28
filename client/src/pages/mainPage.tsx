@@ -8,7 +8,7 @@ import Alert from "../components/Popup/alert";
 import { REMOVE_CONTENT, ADD_CONTENTS } from "../graphql/contents";
 import { ADD_USER, IS_LOGIN, LOGIN_USER, LOGOUT_USER } from "../graphql/users";
 import { graphqlFetcher } from "../lib/queryClient";
-import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState, isNewDocumentState } from "../recoils/pages";
+import { UserLoginState, UserLoginPopupState, alertSelector, alertTextSelector, IdSelector, codeSelector, selectorSelector, pathSelector, currentTargetState, isNewDocumentState,QRPopupSelector } from "../recoils/pages";
 import arrToObj from "../util/arrToObj";
 import ListContainer from "../container/ListContainer";
 import { ADD_DOCUMENT, MODIFY_DOCUMENT } from "../graphql/documents";
@@ -24,6 +24,7 @@ const MainPage = () => {
     const [newDocType, setNewDocType] = useState("");
     const [isLogin,setIsLogin] = useRecoilState(UserLoginState);
     const [isLoginPopup,setIsLoginPopup] = useRecoilState(UserLoginPopupState);
+    const [isQRPopup,setIsQRPopup] = useRecoilState(QRPopupSelector);
     const [id,  setIdState] = useRecoilState<string>(IdSelector);
     const [codeData, setCodeData] = useRecoilState<string>(codeSelector);
     const [selector, setSelector] = useRecoilState<string>(selectorSelector);
@@ -173,6 +174,15 @@ const MainPage = () => {
 */
         return ( 
             <>
+            {isQRPopup && <div className="popup-bg qrpopup">
+                <div className="popup">
+                    <canvas id='qrcodeCanvas'></canvas>
+                    <button onClick={()=>{
+                        setIsQRPopup(false);
+                    }}>확인</button>
+                </div>
+            
+            </div>}
             {isNewDocument && <div className="popup-bg">
                 <div className="popup new-doc">
                     <div>
@@ -222,6 +232,7 @@ const MainPage = () => {
                                     break;
                                 }
                                 addDocument({title, content, selector, imgUrl, path:modifiedPath, author})
+                                setIsNewDocument(false);
                             }}>웹문서 만들기</button>
                             <button onClick={()=>{
                                 setIsNewDocument(false);

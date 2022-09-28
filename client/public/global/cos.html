@@ -37,11 +37,6 @@
         }
       }
     </style>
-    <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/hd.common.js?ver=08030943"></script>
-    <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/modernizr-custom.min.js?ver=080309"></script>
-    <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/jquery-migrate.min.js"></script>
-    <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/cos.custom.js?ver=080309"></script>
   </head>
   <body data-component="OPage" class="layout-inside null" data-component-id="4f9f105a-89e0-49e4-885d-33edacf1a7f6">
     <div id="top_utile_warp" class="u-no-select">
@@ -92,27 +87,6 @@
             </div>
           </div>
         </div>
-        <script>
-          function cartClickEvent(slitImg, slitmNm, slitmPc, slitmSize, slitmColor, stockCnt) {
-            $(".cart-image-wrapper > .product-image").attr("src", slitImg);
-            $(".cart-item-info > .product-name").html(slitmNm);
-            $(".price-section > .price").html(gfn_appendComma(slitmPc));
-            $(".size-section > .size").html(slitmSize);
-            $(".color-section > .color").html(slitmColor);
-            if (stockCnt > 0 && stockCnt < 15) {
-              $("#m-cart-stock-out").html("품절임박! 주문을 서두르세요.");
-            } else {
-              $("#m-cart-stock-out").html("");
-            }
-            $(".cart-addition-section > .m-cart-addition").show(); // 보임
-            setTimeout((function() {
-              $("div.m-cart-addition").hide(); // 숨김 
-            }).bind(this), 5000) // 시간설정
-          }
-          $("div > .a-icon-close").click(function() {
-            $("div.m-cart-addition").hide();
-          });
-        </script>
         <div class="minicart">
           <div class="o-minicart is-empty" data-component="OMinicart" id="gnb_cart_list" data-component-id="44ff8a45-be86-4afb-90d3-348561a2e0db">
             <h2 class="a-heading-2">장바구니&nbsp; <span class="item-count"></span>
@@ -487,19 +461,6 @@
             <div class="mobile-background"></div>
           </div>
         </div>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            if ($.cookie('EHCustNO') !== undefined) {
-              hd.ISLOGIN = true;
-              $(".js-login-area").addClass("hidden");
-              $(".js-logout-area").removeClass("hidden");
-            } else {
-              hd.ISLOGIN = false;
-              $(".js-login-area").removeClass("hidden");
-              $(".js-logout-area").addClass("hidden");
-            }
-          });
-        </script>
         <div id="gnb_search" class="o-search u-clearfix" data-component="OSearch" data-component-id="5c4501ee-e108-41a8-bcec-72f4bccd993d">
           <div class="search-form u-clearfix">
             <span class="a-icon-search"></span>
@@ -551,27 +512,14 @@
               </div>
             </div>
           </div>
-          <script>
-            function hartClickEvent(slitmNm, slitmPc, slitImg, color, slitmCd) {
-              $(".cart-item-info > .product-name").html(slitmNm);
-              $(".price-section > .price").html(gfn_appendComma(slitmPc));
-              $(".color-section> .color").html(color);
-              $(".cart-image-wrapper > .product-image").attr("src", slitImg);
-              $("#gnb_add_wish > .m-wish-addition").show(); // 보임
-              setTimeout((function() {
-                $("#gnb_add_wish > .m-wish-addition").hide(); // 숨김 
-              }).bind(this), 5000) // 시간설정
-            }
-            $("div > .a-icon-close").click(function() {
-              $("#gnb_add_wish > .m-wish-addition").hide();
-            });
-          </script>
         </div>
       </header>
       <div class="q-margin-notification"></div>
     </div>
     <div data-component="OPageContent" class="o-page-content" data-component-id="f2452289-7c34-406a-8415-7ad704fc1cf1" style="margin-top: 0px;">
-      <div class="content-section"></div>
+      <div class="content-section">
+        <!---22d764ca-0c55-4509-88de-51eabed3c7ec0spage877cea15-d229-4cd0-b217-b4cb313ba826-->
+      </div>
     </div>
     <div class="u-no-select" id="footer_warp" style="display:none">
       <!-- [COS_RENEWAL] @Description : 다양성 & 포용성, COS By You 추가 및 위치 수정 . @date:2021-07-01 author: 이승주 -->
@@ -683,8 +631,6 @@
           </div>
         </div>
       </div>
-      <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/co/makePCookie.js"></script>
-      <script type="text/javascript" src="https://image.thehyundai.com/cos_cdn/js/cos/dist/co/os_plugin.js"></script>
       <div data-component="MCookieMessage" class="m-cookie-message" data-component-id="85b0f1e9-89a9-44f4-b5c7-750fb77d59a8">
         <span class="a-icon-close"></span>
         <p>최고의 서비스를 제공하기 위해 쿠키를 사용합니다. <a href="/ko-kr/customer-service/privacy-policy.html" target="_blank" style="text-decoration: none;">
@@ -694,6 +640,5 @@
         </p>
       </div>
     </div>
-    <script src="https://image.thehyundai.com/cos_cdn/js/cos/dist/lazyload.min.js?ver=080309" type="text/javascript"></script>
   </body>
 </html>
