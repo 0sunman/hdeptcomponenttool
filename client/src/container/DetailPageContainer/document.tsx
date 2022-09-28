@@ -189,6 +189,9 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         case "aos":
                                             setPath("/global/aos.html")
                                         break;
+                                        case "arket":
+                                            setPath("/global/arket.html")
+                                        break;
                                         case "더현대-PC":
                                             alert("추후 개발 예정");
                                         break;
@@ -204,6 +207,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                     <option value="">없음</option>
                                     <option value="cos">COS</option>
                                     <option value="aos">AOS</option>
+                                    <option value="arket">ARKET</option>
                                     <option value="thehyundai">THEHYUNDAI</option>
                                     <option value="nanushka">Nanushka</option>
                                 </select>
