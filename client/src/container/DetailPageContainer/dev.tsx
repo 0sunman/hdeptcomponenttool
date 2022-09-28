@@ -9,12 +9,12 @@ import ModifyContainer from "../WriteContainer/modify";
 
 const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 */
 
-    const [isLoginState] = useLogin();
-    const [isLogin, setIsLogin] = useRecoilState(UserLoginState);
+    const [isLogin] = useLogin();
+    const [isLogin2, setIsLogin] = useRecoilState(UserLoginState);
     const {title,content,path,selector,imgUrl} = props.data.content[0]; 
     const [codeData,setCodeData] = useRecoilState<string>(codeSelector);
     const [alertFlag, setAlertFlag] =useRecoilState<boolean>(alertSelector);
-    const [iframeDOM,setIframeDOM]:any[] = useRecoilState<any[]>(IFrameDOMSelector);
+    const [iframeDOM,setIframeDOM]:any[] = useRecoilState(IFrameDOMSelector);
     
     const doCopyClipboard = () => {
         if(ref !== null && ref!.current !== null){
@@ -42,8 +42,8 @@ const DevContainer = forwardRef<HTMLIFrameElement,any>((props,ref)=>{/* 일반 *
         }
     })
     useEffect(()=>{
-        setIsLogin(isLoginState);
-    },[isLoginState]);
+        setIsLogin(isLogin);
+    },[isLogin]);
     
     useEffect(()=>{
         return ()=>{

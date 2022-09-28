@@ -104,11 +104,11 @@ const useModify = ({type, param}:ModifyFrame)=>{
     },[pcontent])
 
     
-    useEffect(()=>{
-        return () => {
-            setCodeData("")
-        }
-    },[])
+    // useEffect(()=>{
+    //     return () => {
+    //         setCodeData("")
+    //     }
+    // },[])
     
     const onClick = useCallback(()=>{
         setAlertFlag(true)

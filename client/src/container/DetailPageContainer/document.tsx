@@ -156,11 +156,11 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
 
     if(isSuccess){
 
-        const {document:[{selector,path}]}= data;
+        const {document:[{selector,path:currentPath}]}= data;
         return (
             <div className="resize-layout" onMouseMove={MouseMoveEvent} onTouchMove={TouchMoveEvent}  onMouseUp={MouseUpEvent}>
                 <div className="frame"  style={{width:`${positionX}%`}}>
-                    <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={path} show={show}/>
+                    <PreviewContainer isSuccess={isSuccess} ref={iframe} selector={selector} path={currentPath} show={show}/>
                     <div className="preview-load" style={{"display":(show)?"none":"flex"}}>
                         <span>
                             화면 이동 중입니다!
@@ -272,7 +272,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                             <li>
                                 <h2 onClick={()=>setStep(4)}>4. 문서 수정하기</h2>
                                 <div ref={step4} className="content">
-                                    <GeneralContainer ref={iframe} selector={selector} path={path} displaynone={true}></GeneralContainer>
+                                    <GeneralContainer ref={iframe} selector={selector} path={currentPath} displaynone={true}></GeneralContainer>
                                 </div>
                             </li>
                             <li>
@@ -294,7 +294,8 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         init += value.content;
                                         return init;
                                     },""));
-                                    modifyDocument({id,content,path,author,imgUrl,componentList:componentlist})
+                                    debugger;
+                                    modifyDocument({id,content,path:currentPath,author,imgUrl,componentList:componentlist})
                                 }}>문서 저장하기</button>
                                 
                             </li>

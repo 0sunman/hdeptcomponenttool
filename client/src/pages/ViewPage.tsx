@@ -27,9 +27,26 @@ const ViewPage = ()=>{
                     setCodeData(code);
                     setSelector(".content-section");
                     setPath(path);
-                    axios({method:"GET",url:"/global/cos.html"}).then((response)=>{
+                    axios({method:"GET",url:path}).then((response)=>{
                         const htmlCode = response.data.replace(`<!---22d764ca-0c55-4509-88de-51eabed3c7ec0spage877cea15-d229-4cd0-b217-b4cb313ba826-->`,code);
-                        testo.current!.innerHTML = htmlCode;
+                        try{
+                            const wrappingFirst = `<!--0script>`;
+                            const wrappingLast = `</0script-->`;
+                            const codeText = code.replace(/\n/gi,"").match(/\<!--0script>.*\<\/0script-->/gi);
+                            testo.current!.innerHTML = htmlCode;
+
+                            
+                            axios({method:"GET",url:'https://image.thehyundai.com/cos_cdn/js/cos/dist/jquery-1.11.3.min.js'}).then((response)=>{
+                                window.eval(response.data);
+                                setTimeout(()=>{
+                                    debugger;
+                                    window.eval(codeText[0].replace(wrappingFirst,"").replace(wrappingLast,""));
+                                },1000);    
+                            })
+                        }catch(e){
+                            console.log("스크립트 에러 발생");
+                            console.log(e);
+                        }
                     })
                 }else{
                 }
