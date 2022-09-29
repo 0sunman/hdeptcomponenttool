@@ -164,6 +164,7 @@ type StyleMap = {
                     
                     case "padding":
                         let paddingValue = value.split(" ").length > 1 ? value.split(" ") : [value];
+                        paddingValue = paddingValue.map(data => (data.indexOf("px") > -1 ? (data):(data+"px")))
                         if(paddingValue.length == 1){
                             newStyleMap.box.paddingTop    = paddingValue[0];
                             newStyleMap.box.paddingRight  = paddingValue[0];
@@ -369,7 +370,10 @@ type StyleMap = {
             }
         }catch(e){
             console.error(e);
-            setAlertText("DOM을 로드하다가 에러가 나버렸습니다. 뭐가 문제일까...")
+            setAlertText("DOM을 로드하다가 에러가 나버렸습니다. 뭐가 문제일까...<br>일단 새로고침 한번 해보시겠어요?")
+            setTimeout(()=>{
+           //     window.location.href="/"
+            },1000);
             
         }
 
@@ -699,7 +703,7 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">마진 - 상단</span></div>
                                                                 <div> <input className="inputViewer" type="text" value={style.box.marginTop.replace("px","")*1}/>
-                                                                <input type="range" min="1" max="100" defaultValue={style.box.marginTop.replace("px","")} onChange={(e)=>{
+                                                                <input type="range" min="0" max="100" defaultValue={style.box.marginTop.replace("px","")} onChange={(e)=>{
                                                                     const marginTop = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
                                                                         key,element,
@@ -719,7 +723,7 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">마진 - 우측</span></div>
                                                                 <div> <input className="inputViewer" type="text" value={style.box.marginRight.replace("px","")*1}/>
-                                                                <input type="range" min="1" max="100" defaultValue={style.box.marginRight.replace("px","")} onChange={(e)=>{
+                                                                <input type="range" min="0" max="100" defaultValue={style.box.marginRight.replace("px","")} onChange={(e)=>{
                                                                     const marginRight = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
                                                                         key,element,
@@ -739,7 +743,7 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">마진 - 하단</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.marginBottom.split(" ")[0].replace("px","")*1}/>
-                                                                <input type="range" min="1" max="100" defaultValue={style.box.marginBottom.split(" ")[0].replace("px","")} onChange={(e)=>{
+                                                                <input type="range" min="0" max="100" defaultValue={style.box.marginBottom.split(" ")[0].replace("px","")} onChange={(e)=>{
                                                                     const marginBottom = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
                                                                         key,element,
@@ -760,7 +764,7 @@ type StyleMap = {
                                                                 <div>
                                                                 <span className="control-title">마진 - 좌측</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.marginLeft.replace("px","")*1}/>
-                                                                <input type="range" min="1" max="100" defaultValue={style.box.marginLeft.replace("px","")} onChange={(e)=>{
+                                                                <input type="range" min="0" max="100" defaultValue={style.box.marginLeft.replace("px","")} onChange={(e)=>{
                                                                     const marginLeft = e.target.value + "px";
                                                                     setIframeDOM(changeStyle({
                                                                         key,element,
@@ -873,7 +877,7 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">테두리 - 좌측</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.borderLeft.split(" ")[0].replace("px","")*1}/>
-                                                            <input type="range" min="1" max="100" defaultValue={style.box.borderLeft.split(" ")[0].replace("px","")*1} onChange={(e)=>{
+                                                            <input type="range" min="0" max="100" defaultValue={style.box.borderLeft.split(" ")[0].replace("px","")*1} onChange={(e)=>{
                                                                 const borderLeft = e.target.value;
                                                                 setIframeDOM(changeStyle({
                                                                     key,element,
@@ -901,8 +905,8 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">패딩 - 상단</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.paddingTop.replace("px","")*1}/>
-                                                            <input type="range" min="1" max="100" defaultValue={style.box.paddingTop} onChange={(e)=>{
-                                                                const paddingTop = e.target.value;
+                                                            <input type="range" min="0" max="100" defaultValue={style.box.paddingTop} onChange={(e)=>{
+                                                                const paddingTop = ((e.target.value) ? e.target.value : 0)+"px";
                                                                 setIframeDOM(changeStyle({
                                                                     key,element,
                                                                     type:"box",target:"paddingTop",value:paddingTop,
@@ -925,8 +929,8 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">패딩 - 우측</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.paddingRight.replace("px","")*1}/>
-                                                            <input type="range" min="1" max="100" defaultValue={style.box.paddingRight} onChange={(e)=>{
-                                                                const paddingRight = e.target.value;
+                                                            <input type="range" min="0" max="100" defaultValue={style.box.paddingRight} onChange={(e)=>{
+                                                                const paddingRight = ((e.target.value) ? e.target.value : 0)+"px";
                                                                 setIframeDOM(changeStyle({
                                                                     key,element,
                                                                     type:"box",target:"paddingRight",value:paddingRight,
@@ -949,8 +953,8 @@ type StyleMap = {
                                                             <div className="row-two">
                                                                 <div><span className="control-title">패딩 - 하단</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.paddingBottom.replace("px","")*1}/>
-                                                            <input type="range" min="1" max="100" defaultValue={style.box.paddingBottom} onChange={(e)=>{
-                                                                const paddingBottom = e.target.value;
+                                                            <input type="range" min="0" max="100" defaultValue={style.box.paddingBottom} onChange={(e)=>{
+                                                                const paddingBottom = ((e.target.value) ? e.target.value : 0)+"px";
                                                                 setIframeDOM(changeStyle({
                                                                     key,element,
                                                                     type:"box",target:"paddingBottom",value:paddingBottom,
@@ -976,7 +980,7 @@ type StyleMap = {
                                                             <span className="control-title">패딩 - 좌측</span></div>
                                                                 <div><input className="inputViewer" type="text" value={style.box.paddingLeft.replace("px","")*1}/>
                                                             <input type="range" min="1" max="100" defaultValue={style.box.paddingLeft} onChange={(e)=>{
-                                                                const paddingLeft = e.target.value;
+                                                                const paddingLeft = ((e.target.value) ? e.target.value : 0)+"px";
                                                                 setIframeDOM(changeStyle({
                                                                     key,element,
                                                                     type:"box",target:"paddingLeft",value:paddingLeft,

@@ -194,11 +194,11 @@ const MainPage = () => {
                             setNewDocType(e.target.value);
                         }}>
                             <option value="">문서 유형을 지정하세요.</option>
+                            <option value="doc">새로운 웹 문서</option>
                             <option value="cos">COS</option>
                             <option value="aos">AOS</option>
                             <option value="arket">ARKET</option>
                             <option value="thd">THE HYUNDAI</option>
-                            <option value="doc">새로운 웹 문서</option>
                         </select>
                         <div className="button-area">
                             <button onClick={()=>{
@@ -228,7 +228,7 @@ const MainPage = () => {
                                         modifiedPath = "/global/thehyundai.html"
                                     break;
                                     case "doc":
-                                        modifiedPath = "doc"
+                                        modifiedPath = "/global/general_page_1.html"
                                     break;
                                 }
                                 addDocument({title, content, selector, imgUrl, path:modifiedPath, author})
