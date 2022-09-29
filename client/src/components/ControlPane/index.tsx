@@ -51,10 +51,6 @@ const ControlPane = ({children,createDocument, copyClipboard,openImageUploaderPo
             <div id="html_controller" style={{height:`calc(${controlPaneSize}% + ${initHeight})`}}>
                 <div className='controlpane'>
                     <ControlList>
-                        <ControlButton onClick={createDocument}>
-                        <span className="material-symbols-outlined">description</span>
-                            <span className="text">문서 만들기</span>
-                        </ControlButton>
                         <ControlButton onClick={copyClipboard}>
                             <span className="material-symbols-outlined icon">content_paste</span>
                             <span className="text">코드 복사</span>

@@ -298,7 +298,6 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                                         init += value.content;
                                         return init;
                                     },""));
-                                    debugger;
                                     modifyDocument({id,content,path:currentPath,author,imgUrl,componentList:componentlist})
                                 }}>문서 저장하기</button>
                                 
