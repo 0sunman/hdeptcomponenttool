@@ -300,35 +300,7 @@ type StyleMap = {
         return newStyleMap;
     }
 
-
     useEffect(()=>{
-        try{ // 스크립트 실행부
-            const wrappingFirst = `<script>`;
-            const wrappingLast = `</script>`;
-            const codeText = codeData.replace(/\n/gi,"").match(/\<script>.*\<\/script>/gi);
-            top?.document.querySelector("iframe")?.contentWindow?.eval(codeText[0].replace(wrappingFirst,"").replace(wrappingLast,""));
-            console.log(codeText)
-        }catch(e){
-
-        }
-        try{
-            
-        const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;
-//document.querySelectorAll(".frame")[1].scroll({top:102+40,behavior:"smooth"})
-        iframeDocument.querySelectorAll(".content-section > div").forEach((section)=>{
-            section.addEventListener("click",(e)=>{                
-                (top?.document.querySelector(".documentstylecomponent") as HTMLElement)!.style.display = "block";
-                try{
-                    document.querySelectorAll(".frame")[1].scroll(0,0)
-                    const scrollValue = window.pageYOffset + (top?.document.querySelector(`.component-group-title[data-id='${e.currentTarget.dataset["0sid"]}']`) as HTMLElement).getBoundingClientRect().top - 40;
-                    console.log(scrollValue);
-                    document.querySelectorAll(".frame")[1].scroll({top:scrollValue})
-                }catch(e){
-
-                }
-            })
-        })
-    }catch(e){}
         try{
             setAlertFlag(true);
             setAlertText("DOM을 읽어서 쉽게 만드는 중입니다.")
@@ -431,11 +403,11 @@ type StyleMap = {
         }
     }
     let beforeBigTitle = "";
-        const createBigTitle = (name, parentId) => {
+        const createBigTitle = (name) => {
             if(name === undefined) return <></>
             if(beforeBigTitle !== name){
                 beforeBigTitle = name;
-                return (<div className='component-group-title' data-id={parentId ? parentId : ""}>
+                return (<div className='component-group-title'>
                     <hr></hr>
                     <h2>{name}</h2>
                 </div>)
@@ -492,13 +464,10 @@ type StyleMap = {
                             testCheck(element);
                             switch(target){
                                 case "href":
-                                    element.addEventListener("click",(e)=>{
-                                        e.preventDefault();
-                                    })
                                 return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <div className="row-two">
                                             <div>
@@ -520,20 +489,11 @@ type StyleMap = {
                                     </div>
                                     )
 
-                                case "text":
-                                    const iframeDocument = (ref!.current as HTMLIFrameElement).contentDocument!;             
-                                    element.contentEditable = true;
-                                    element.addEventListener("keyup",()=>{
-                                        testCheck();                                        
-                                    })
-                                    // element.addEventListener("keyup",(e)=>{
-                                    //     element.innerText
-                                    // })
-//                                    iframeDocument.querySelector("")
+                                case "text":             
                                     return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <div className="row-two">
                                             <div>
@@ -541,38 +501,37 @@ type StyleMap = {
                                             </div>
                                             <div>
                                                 <textarea 
-                                                defaultValue={element.innerText} className="control-input" data-parentId={parentId}
+                                            defaultValue={element.innerText} className="control-input" data-parentId={parentId}
+                                            
+                                            onClick={(e)=>{
+                                                if(element.innerText !== e.target.value){
+                                                    e.target.value = element.innerText
+                                                }
+                                            }}
+                                            onChange={(e)=>{
+                                                element.innerText = e.target.value;
                                                 
-                                                onClick={(e)=>{
-                                                    if(element.innerText !== e.target.value){
-                                                        e.target.value = element.innerText
-                                                    }
-                                                }}
-                                                onChange={(e)=>{
-                                                    element.innerText = e.target.value;
-                                                    
-                                                    e.currentTarget.style.height = "12px";
-                                                    e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
-                                                }}
+                                                e.currentTarget.style.height = "12px";
+                                                e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+                                            }}
 
-                                                onFocus={(e)=>{                                            
-                                                    e.currentTarget.style.height = "12px";
-                                                    e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
+                                            onFocus={(e)=>{                                            
+                                                e.currentTarget.style.height = "12px";
+                                                e.currentTarget.style.height = (e.currentTarget.scrollHeight)+"px";
 
-                                                }}></textarea>
+                                            }}></textarea>
                                             </div>
                                         </div>
                                         
                                     </div>
                                     )
-                                    break;
                                 
                                  
                                 case "img":          
                                     return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <div className="row-two">
                                             <div>
@@ -596,7 +555,7 @@ type StyleMap = {
                                     return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <div className="row-two">
                                             <div>
@@ -631,7 +590,7 @@ type StyleMap = {
                                     return (
                                         <div className="style-component">
                                             
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                             {createTitle(name)}
                                             <div className="style-group">
                                                 <div>
@@ -1099,7 +1058,7 @@ type StyleMap = {
                                     return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <span className="control-title">클래스명</span>
                                         <input type='text' defaultValue={element.getAttribute("class")} className="control-input" onKeyUp={(e)=>{
@@ -1112,7 +1071,7 @@ type StyleMap = {
                                     return (
                                     <div>
                                         
-                                        {createBigTitle(title,parentId)}
+                                        {createBigTitle(title)}
                                         {createTitle(name)}
                                         <div className="row-two">
                                         <div><span className="control-title">추가하기</span></div>

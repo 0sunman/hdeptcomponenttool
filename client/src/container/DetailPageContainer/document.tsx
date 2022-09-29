@@ -275,7 +275,7 @@ const DetailPageContainer = ({pageType}:{pageType:("general" | "dev")})=>{
                             </li>
                             <li>
                                 <h2 onClick={()=>setStep(4)}>4. 문서 수정하기</h2>
-                                <div ref={step4} className="content">
+                                <div ref={step4} className="content documentstylecomponent">
                                     <GeneralContainer ref={iframe} selector={selector} path={currentPath} displaynone={true}></GeneralContainer>
                                 </div>
                             </li>

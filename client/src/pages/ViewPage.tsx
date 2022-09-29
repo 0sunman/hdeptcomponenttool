@@ -33,13 +33,12 @@ const ViewPage = ()=>{
                             const wrappingFirst = `<!--0script>`;
                             const wrappingLast = `</0script-->`;
                             const codeText = code.replace(/\n/gi,"").match(/\<!--0script>.*\<\/0script-->/gi);
-                            testo.current!.innerHTML = htmlCode;
+                            testo.current!.innerHTML = htmlCode.replace(/contenteditable/gi,"data-contenteditable");
 
                             
                             axios({method:"GET",url:'https://image.thehyundai.com/cos_cdn/js/cos/dist/jquery-1.11.3.min.js'}).then((response)=>{
                                 window.eval(response.data);
                                 setTimeout(()=>{
-                                    debugger;
                                     window.eval(codeText[0].replace(wrappingFirst,"").replace(wrappingLast,""));
                                 },1000);    
                             })
